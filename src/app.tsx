@@ -27,8 +27,8 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await window.sessionStorage.getItem('userInfo')
-      return msg
+      const msg: any = await window.sessionStorage.getItem('userInfo')
+      return JSON.parse(msg)
     } catch (error) {
       history.push(loginPath);
     }
@@ -48,8 +48,6 @@ export async function getInitialState(): Promise<{
     settings: defaultSettings,
   };
 }
-
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,

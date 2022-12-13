@@ -7,6 +7,8 @@ import useMergedState from 'rc-util/es/hooks/useMergedState';
 import React, { useRef } from 'react';
 import styles from './index.less';
 
+import Toggle from '@/common/svg/toggle.svg'
+
 export type HeaderSearchProps = {
   onSearch?: (value?: string) => void;
   onChange?: (value?: string) => void;
@@ -63,12 +65,13 @@ const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
         }
       }}
     >
-      <SearchOutlined
+      <img src={Toggle} width={'20px'} height={'20px'} alt="" />
+      {/* <SearchOutlined
         key="Icon"
         style={{
           cursor: 'pointer',
         }}
-      />
+      /> */}
       <AutoComplete
         key="AutoComplete"
         className={inputClass}
