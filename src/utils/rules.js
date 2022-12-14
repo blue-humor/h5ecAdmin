@@ -43,3 +43,11 @@ export const merchant = {
     },
   ],
 };
+export const sortRules = {
+  name: [
+    {
+      required: true,
+      message: '文章标题不能为空',
+    },
+  ],
+};

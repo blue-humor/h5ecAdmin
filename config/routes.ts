@@ -15,7 +15,7 @@
   },
 
   {
-    path: '/welcome',
+    path: '/banner',
     name: 'Banner',
     icon: 'picture',
     component: './Welcome',
@@ -27,62 +27,45 @@
     component: './sort',
   },
   {
-    path: '/welcome',
+    path: '/msc',
     name: '商户管理',
     icon: 'shop',
-    component: './Welcome',
+    component: './msc',
   },
   {
-    path: '/welcome',
+    path: '/goods',
     name: '商品管理',
     icon: 'shopping',
-    component: './Welcome',
+    component: './goods',
   },
   {
-    path: '/welcome',
+    path: '/order',
     name: '订单管理',
     icon: 'orderedList',
-    component: './Welcome',
+    component: './order',
   },
   {
-    path: '/welcome',
+    path: '/apply',
     name: '报名管理',
     icon: 'Audit',
-    component: './Welcome',
+    component: './apply',
   },
   {
-    path: '/welcome',
+    path: '/refer',
     name: '咨询管理',
     icon: 'comment',
-    component: './Welcome',
+    component: './refer',
   },
   {
-    path: '/welcome',
+    path: '/vip',
     name: '会员管理',
     icon: 'user',
-    component: './Welcome',
+    component: './vip',
   },
-  // {
-  //   path: '/admin',
-  //   name: 'admin',
-  //   icon: 'crown',
-  //   access: 'canAdmin',
-  //   routes: [
-  //     {
-  //       path: '/admin/sub-page',
-  //       name: 'sub-page',
-  //       icon: 'smile',
-  //       component: './Welcome',
-  //     },
-  //     {
-  //       component: './404',
-  //     },
-  //   ],
-  // },
 
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/banner',
   },
   {
     component: './404',
