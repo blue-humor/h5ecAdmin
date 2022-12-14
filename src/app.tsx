@@ -8,6 +8,8 @@ import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 
+import Logo from '@/common/img/logo.png';
+
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -19,6 +21,8 @@ export const initialStateConfig = {
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
+
+
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser | any;
@@ -50,16 +54,17 @@ export async function getInitialState(): Promise<{
 }
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    logo: Logo,
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-    footerRender: () => <Footer />,
+    // footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      if (!window.sessionStorage.getItem('token') && location.pathname !== loginPath) {
         history.push(loginPath);
       }
     },

@@ -13,6 +13,7 @@ body,
 .ant-layout {
   min-height: 100vh;
 }
+
 .ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
   left: unset;
 }
@@ -36,12 +37,15 @@ ol {
   .ant-table {
     width: 100%;
     overflow-x: auto;
-    &-thead > tr,
-    &-tbody > tr {
-      > th,
-      > td {
+
+    &-thead>tr,
+    &-tbody>tr {
+
+      >th,
+      >td {
         white-space: pre;
-        > span {
+
+        >span {
           display: block;
         }
       }
@@ -50,8 +54,46 @@ ol {
 }
 
 // Compatible with IE11
-@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
-  body .ant-design-pro > .ant-layout {
+@media screen and(-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  body .ant-design-pro>.ant-layout {
     min-height: 100vh;
+  }
+}
+
+/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+  font-family: Regular;
+  font-weight: 400;
+  src: url("//at.alicdn.com/wf/webfont/H17VUGitw9NF/LZACzcbu28_JUpfPOLEMa.woff2") format("woff2"),
+    url("//at.alicdn.com/wf/webfont/H17VUGitw9NF/V1NJ1aStIL0iodzTi2YYC.woff") format("woff");
+  font-display: swap;
+}
+
+/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+  font-family: ALBold;
+  font-weight: 700;
+  src: url("//at.alicdn.com/wf/webfont/H17VUGitw9NF/5aLhUvmZUts8zLk_qV5H8.woff2") format("woff2"),
+    url("//at.alicdn.com/wf/webfont/H17VUGitw9NF/Idq1YQzlNXLDJwypvnZtv.woff") format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Times;
+  font-weight: 700;
+  src: url('./common/font/Scratch\ Times.ttf');
+  font-display: swap;
+}
+
+//antd h1 title
+.ant-pro-global-header-logo {
+  h1 {
+    font-family: Times !important;
+    font-size: 30px !important;
+  }
+
+  img {
+    display: none;
   }
 }

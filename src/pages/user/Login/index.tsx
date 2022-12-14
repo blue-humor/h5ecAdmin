@@ -93,7 +93,7 @@ const Login: React.FC = () => {
       <div className={styles.content}>
         <LoginForm
           // logo={<img alt="logo" src={Logo} />}
-          title="Ant Design"
+          title={<div className={styles.title}>Future</div>}
           // subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{
             autoLogin: true,
@@ -287,7 +287,7 @@ const Login: React.FC = () => {
           </div>
         </LoginForm>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
