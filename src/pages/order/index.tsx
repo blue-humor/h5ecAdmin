@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Row } from 'antd';
+import { Button, Popconfirm, Typography } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -13,13 +13,31 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 interface IndexProps { }
 
 const size: string | any = 'large';
-const PopconfirmTitle = `确认删除账号吗？此操作不可撤销  `;
+const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
+
+const data = [
+    {
+        id: '1',
+        name: '父类',
+        children: [
+            {
+                id: '2',
+                name: '子类',
+                children: [
+                    {
+                        name: '子子类'
+                    }
+                ]
+            }
+        ]
+    }
+]
 
 const getData = () => {
     let data = []
     for (let i = 0; i < 100; i++) {
-        data.push({ id: i, name: '上衣' + i, createDate: Date.now() })
+        data.push({ id: i, orderId: '10000012' + i, sum: 1000 + i, createDate: Date.now(), paynum: 8213802183 + 1, status: '-1' })
     }
     return data
 }
@@ -72,15 +90,44 @@ const Index: React.FC<IndexProps> = (props) => {
             width: 80,
         },
         {
-            title: '分类名',
-            dataIndex: 'name',
+            title: '订单号',
+            dataIndex: 'orderId',
             valueType: 'textarea',
             copyable: true,
 
         },
         {
-            title: '创建时间',
+            title: '状态',
+            dataIndex: 'status',
+            // valueType: 'textarea',
+            valueEnum: {
+                '-1': { text: '关闭', status: 'Default' },
+                '2': { text: '运行中', status: 'Processing' },
+                3: { text: '已上线', status: 'Success' },
+                4: { text: '异常', status: 'Error' },
+            },
+
+        },
+        {
+            title: '金额',
+            dataIndex: 'sum',
+            // valueType: 'textarea',
+            copyable: true,
+            hideInSearch: true,
+            render: (_, row) => {
+                return <Typography.Text type="danger">
+                    ${row?.sum}
+                </Typography.Text>
+            }
+        },
+        {
+            title: '支付时间',
             dataIndex: 'createDate',
+            hideInSearch: true,
+        },
+        {
+            title: '支付单号',
+            dataIndex: 'paynum',
             hideInSearch: true,
         },
         {
@@ -90,8 +137,9 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} />,
-                <Button type="link" key='add' icon={<PlusCircleOutlined />} onClick={() => handleModal(true, row)} />,
+                <Button type="link" key='edit' onClick={() => handleModal(true, row)} >
+                    详情
+                </Button>,
                 <Popconfirm
                     key='popconfirm'
                     title={PopconfirmTitle}
@@ -100,7 +148,9 @@ const Index: React.FC<IndexProps> = (props) => {
                     cancelText="No"
                     onConfirm={() => handleDelete(row?.id)}
                 >
-                    <Button type="link" key='delete' icon={<DeleteOutlined />} />
+                    <Button type="link" key='delete' >
+                        发货
+                    </Button>
                 </Popconfirm>,
             ],
         },

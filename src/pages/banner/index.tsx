@@ -7,7 +7,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
-import { reqTableList } from '@/services/msc';
+import { reqTableList } from '@/services/banner';
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -16,6 +16,7 @@ interface IndexProps { }
 
 const size: string | any = 'large';
 const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
+
 
 
 const Index: React.FC<IndexProps> = (props) => {
@@ -41,6 +42,8 @@ const Index: React.FC<IndexProps> = (props) => {
                 total: res.data.total,
             };
         }
+
+
     };
 
     /**
@@ -53,12 +56,17 @@ const Index: React.FC<IndexProps> = (props) => {
     const columns: ProColumns<TableListItem>[] = [
 
         {
-            title: '商店名',
-            dataIndex: 'storeName',
-            copyable: true,
-            valueType: 'textarea',
+            title: '轮播图片',
+            dataIndex: 'name',
+            hideInSearch: true,
+            render: (_, row) => <Image src={row?.fileUrl} />
         },
-
+        {
+            title: '标题',
+            dataIndex: 'fileName',
+            valueType: 'textarea',
+            copyable: true,
+        },
         {
             width: 280,
             align: 'center',

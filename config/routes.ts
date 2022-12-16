@@ -18,7 +18,7 @@
     path: '/banner',
     name: 'Banner',
     icon: 'picture',
-    component: './Welcome',
+    component: './banner',
   },
   {
     path: '/sort',
@@ -36,7 +36,18 @@
     path: '/goods',
     name: '商品管理',
     icon: 'shopping',
-    component: './goods',
+    routes: [
+      { path: '/goods/home', name: '商品列表', component: './goods/home' },
+      {
+        path: '/goods/home/details',
+        name: '商品详情',
+        component: './goods/details',
+        hideInMenu: true,
+      },
+
+      { path: '/goods', redirect: '/goods/home' },
+      { component: './404' },
+    ],
   },
   {
     path: '/order',

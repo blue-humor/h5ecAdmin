@@ -1,58 +1,52 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Row } from 'antd';
-import { PlusOutlined, FormOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { history } from 'umi';
+
+import { Button, Popconfirm, Image } from 'antd';
+import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
-import type { TableListItem, TableListPagination } from './data';
+import { reqTableList } from '@/services/goods';
+
+import type { TableListItem, TableListPagination } from '../data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 interface IndexProps { }
 
 const size: string | any = 'large';
-const PopconfirmTitle = `确认删除账号吗？此操作不可撤销  `;
+const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
-const getData = () => {
-  let data = []
-  for (let i = 0; i < 100; i++) {
-    data.push({ id: i, name: '上衣' + i, createDate: Date.now() })
-  }
-  return data
-}
+
 
 const Index: React.FC<IndexProps> = (props) => {
   const actionRef = useRef<ActionType>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [row, setRow] = useState<TableListItem>()
-  const handleModal = (show: boolean, row?: TableListItem) => {
-    if (row?.id) {
-      setRow(row)
-    }
-    setIsOpen(show)
-  }
 
   const handleDelete = (id: number) => {
 
   }
+  const handlePush = (params: string) => {
+    history.push({
+      pathname: '/goods/home/details',
+      query: {
+        type: params
+      }
+    })
+  }
 
   const handleTableList = async (params: TableListPagination) => {
-    // const res = await reqTableList(params);
-    // if (res.code === '200') {
-    //     return {
-    //         data: res.data.list,
-    //         success: true,
-    //         total: res.data.total,
-    //     };
-    // }
-    const data = getData()
-    return {
-      data: data,
-      success: true,
-      total: data.length,
-    };
+    const res = await reqTableList(params);
+    if (res.code === 200) {
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.total,
+      };
+    }
   };
 
   /**
@@ -63,22 +57,45 @@ const Index: React.FC<IndexProps> = (props) => {
 
 
   const columns: ProColumns<TableListItem>[] = [
-    {
-      title: '序号',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 80,
-    },
-    {
-      title: '分类名',
-      dataIndex: 'name',
-      valueType: 'textarea',
-      copyable: true,
 
+    {
+      width: 80,
+      title: '商品图',
+      align: 'center',
+      fixed: 'left',
+      hideInSearch: true,
+      render: (_: any, record: any) => <Image width={40} src={record.thumb} />
     },
+    {
+      align: 'center',
+      title: '标题',
+      dataIndex: 'title',
+      copyable: true,
+      ellipsis: true,
+      width: 280,
+      tip: '标题过长会自动收缩',
+      fixed: 'left',
+    },
+    {
+      align: 'center',
+      title: '价格',
+      dataIndex: 'price',
+      hideInSearch: true,
+    },
+    {
+      title: '库存',
+      dataIndex: 'stock',
+      hideInSearch: true,
+    },
+    {
+      title: '销量',
+      dataIndex: 'sales',
+      hideInSearch: true,
+    },
+
     {
       title: '创建时间',
-      dataIndex: 'createDate',
+      dataIndex: 'created_at',
       hideInSearch: true,
     },
     {
@@ -88,7 +105,7 @@ const Index: React.FC<IndexProps> = (props) => {
       title: '操作',
       hideInSearch: true,
       render: (_, row) => [
-        <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} />,
+        <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handlePush('edit')} />,
         <Popconfirm
           key='popconfirm'
           title={PopconfirmTitle}
@@ -126,7 +143,7 @@ const Index: React.FC<IndexProps> = (props) => {
               type="primary"
               icon={<PlusOutlined />}
               // size={size}
-              onClick={() => handleModal(true)}
+              onClick={() => handlePush('add')}
             >
               新建
             </Button>]}

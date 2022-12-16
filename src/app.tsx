@@ -8,7 +8,7 @@ import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 
-import Logo from '@/common/img/logo.png';
+// import Logo from '@/common/img/logo.png';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -54,7 +54,7 @@ export async function getInitialState(): Promise<{
 }
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    logo: Logo,
+    logo: '',
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
@@ -70,14 +70,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: isDev
       ? [
-        <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-          <LinkOutlined />
-          <span>OpenAPI 文档</span>
-        </Link>,
-        <Link to="/~docs" key="docs">
-          <BookOutlined />
-          <span>业务组件文档</span>
-        </Link>,
       ]
       : [],
     menuHeaderRender: undefined,

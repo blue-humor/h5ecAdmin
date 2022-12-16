@@ -7,6 +7,8 @@ export type TableListPagination = {
 export type TableListItem = {
   name: string;
   id: number;
+  sum?: number;
+  paynum: number | string;
 };
 
 export type EditModalProps = {

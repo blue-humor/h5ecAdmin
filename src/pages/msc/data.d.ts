@@ -13,4 +13,5 @@ export type EditModalProps = {
   isOpen: boolean;
   handleModal: (params: boolean) => void;
   row?: T;
+  actionRef: any;
 };
