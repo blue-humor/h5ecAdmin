@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 
-import { history } from 'umi';
+import { history, useModel } from 'umi';
 
-import { Button, Popconfirm, Image } from 'antd';
+import { Button, Popconfirm, Image, Tag } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -11,7 +11,7 @@ import { reqTableList } from '@/services/goods';
 
 import type { TableListItem, TableListPagination } from '../data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
-
+import styles from './index.less';
 interface IndexProps { }
 
 const size: string | any = 'large';
@@ -21,6 +21,9 @@ const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
 const Index: React.FC<IndexProps> = (props) => {
+
+
+
   const actionRef = useRef<ActionType>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -29,11 +32,16 @@ const Index: React.FC<IndexProps> = (props) => {
   const handleDelete = (id: number) => {
 
   }
-  const handlePush = (params: string) => {
+  const handleAddPush = () => {
+    history.push({
+      pathname: '/goods/home/details',
+    })
+  }
+  const handleEditPush = (row?: any) => {
     history.push({
       pathname: '/goods/home/details',
       query: {
-        type: params
+        id: row?.id,
       }
     })
   }
@@ -59,39 +67,52 @@ const Index: React.FC<IndexProps> = (props) => {
   const columns: ProColumns<TableListItem>[] = [
 
     {
-      width: 80,
+      width: 150,
       title: '商品图',
       align: 'center',
       fixed: 'left',
       hideInSearch: true,
-      render: (_: any, record: any) => <Image width={40} src={record.thumb} />
+      render: (_: any, record: any) => <Image width={60} src={record.thumb} />
     },
     {
-      align: 'center',
       title: '标题',
       dataIndex: 'title',
       copyable: true,
       ellipsis: true,
       width: 280,
-      tip: '标题过长会自动收缩',
       fixed: 'left',
     },
     {
       align: 'center',
-      title: '价格',
+      title: '现价',
       dataIndex: 'price',
       hideInSearch: true,
+      render: (_, row) => <Tag className={styles.homeTagPrice}>
+        ￥{row?.price}
+      </Tag>
+    },
+    {
+      align: 'center',
+      title: '原价',
+      dataIndex: 'originPrice',
+      hideInSearch: true,
+      render: (_, row) => <Tag className={styles.homeTagOriginal}>
+        ￥{row?.originPrice}
+      </Tag>
     },
     {
       title: '库存',
-      dataIndex: 'stock',
+      dataIndex: 'soldNum',
       hideInSearch: true,
+      render: (_, row) => <Tag className={styles.homeSoldNum}>
+        {row?.soldNum}件
+      </Tag>
     },
-    {
-      title: '销量',
-      dataIndex: 'sales',
-      hideInSearch: true,
-    },
+    // {
+    //   title: '销量',
+    //   dataIndex: 'sales',
+    //   hideInSearch: true,
+    // },
 
     {
       title: '创建时间',
@@ -105,7 +126,9 @@ const Index: React.FC<IndexProps> = (props) => {
       title: '操作',
       hideInSearch: true,
       render: (_, row) => [
-        <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handlePush('edit')} />,
+        <Button key='edit' type="link" icon={<FormOutlined />} onClick={() => handleEditPush(row)} >
+          编辑
+        </Button>,
         <Popconfirm
           key='popconfirm'
           title={PopconfirmTitle}
@@ -114,7 +137,9 @@ const Index: React.FC<IndexProps> = (props) => {
           cancelText="No"
           onConfirm={() => handleDelete(row?.id)}
         >
-          <Button type="link" key='delete' icon={<DeleteOutlined />} />
+          <Button key='delete' type="link" icon={<DeleteOutlined />} >
+            删除
+          </Button>
         </Popconfirm>,
       ],
     },
@@ -127,14 +152,15 @@ const Index: React.FC<IndexProps> = (props) => {
     <>
       <PageContainer>
         <ProTable<TableListItem, TableListPagination>
-          // scroll={{ x: 1300 }}
+          scroll={{ x: 1300 }}
           defaultSize={size}
           columns={columns}
           actionRef={actionRef}
           request={(params): Promise<any> => handleTableList(params)}
           rowKey="id"
           pagination={{
-            pageSize: 10,
+            defaultPageSize: 5,
+            showSizeChanger: true,
           }}
           dateFormatter="string"
           toolBarRender={() => [
@@ -143,7 +169,7 @@ const Index: React.FC<IndexProps> = (props) => {
               type="primary"
               icon={<PlusOutlined />}
               // size={size}
-              onClick={() => handlePush('add')}
+              onClick={() => handleAddPush()}
             >
               新建
             </Button>]}

@@ -1,16 +1,18 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Image, Badge } from 'antd';
+import { Button, Popconfirm, Image, Typography } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
-import { reqTableList } from '@/services/apply';
+
+import { reqTableList } from '@/services/information';
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ProColumns } from '@ant-design/pro-table';
+
 
 interface IndexProps { }
 
@@ -18,28 +20,13 @@ const size: string | any = 'large';
 const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
-const renderBadge = (count: number, active = false) => {
-    return (
-        <Badge
-            count={count}
-            style={{
-                marginBlockStart: -2,
-                marginInlineStart: 4,
-                color: active ? '#1890FF' : '#999',
-                backgroundColor: active ? '#E6F7FF' : '#eee',
-            }}
-        />
-    );
-};
-
 const Index: React.FC<IndexProps> = (props) => {
     const actionRef = useRef<any>()
 
+    const [activeKey, setActiveKey] = useState<any>('1');
+
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<any>()
-
-    const [activeKey, setActiveKey] = useState<React.Key>('tab1');
-
     const handleModal = (show: boolean, row: any = null) => {
         setRow(row)
         setIsOpen(show)
@@ -49,13 +36,15 @@ const Index: React.FC<IndexProps> = (props) => {
 
     }
 
-    const handleTableList = async (params: TableListPagination) => {
-        const res = await reqTableList(params);
+
+    const handleTableList = async (params: any) => {
+        const res = await reqTableList({ ...params, type: activeKey })
         if (res.code === 200) {
+            const { list, total } = res?.data
             return {
-                data: res.data.list,
+                data: list,
                 success: true,
-                total: res.data.total,
+                total: total,
             };
         }
     };
@@ -69,75 +58,43 @@ const Index: React.FC<IndexProps> = (props) => {
 
     const columns: ProColumns<TableListItem>[] = [
         {
-            width: 80,
-            title: 'logo',
-
-            fixed: 'left',
+            width: 150,
+            title: '文章图片',
+            dataIndex: 'thumb',
             hideInSearch: true,
-            render: (_: any, record: { teamLogo: string | undefined; }) => <Image width={40} src={record.teamLogo} />,
+            render: (_, row) => <Image src={row?.thumb} width={100} />
         },
-        {
 
-            title: '队伍名称',
-            dataIndex: 'teamName',
+        {
+            width: 280,
+            title: '文章标题',
+            dataIndex: 'title',
             copyable: true,
             ellipsis: true,
-            width: 150,
-            fixed: 'left',
-        },
-        {
 
-            title: '领队姓名',
-            dataIndex: 'leader',
+
+        },
+
+        {
+            width: 280,
             ellipsis: true,
+            title: '文章视频',
+            dataIndex: 'video',
             hideInSearch: true,
-        },
-        {
-
-            title: '性别',
-            dataIndex: 'sex',
-            hideInSearch: true,
-        },
-        {
-
-            title: '队伍名称',
-            dataIndex: 'groupName',
-            hideInSearch: true,
-        },
-        {
-
-            title: '参赛项目',
-            dataIndex: 'projectNames',
-            hideInSearch: true,
-        },
-        {
-            width: 180,
-            title: '联系电话',
-            dataIndex: 'contactPhone',
-            hideInSearch: true,
-        },
-        {
-            width: 240,
-            title: '身份证号码',
-            dataIndex: 'contactPhone',
-            hideInSearch: true,
+            render: (_, row) => <Typography.Link target='_blank' href={row?.video} >{row?.video}</Typography.Link>
         },
 
         {
-            width: 200,
-
-            title: '创建时间',
-            dataIndex: 'createDatetime',
-            hideInSearch: true,
-        },
-        {
-            width: 160,
+            width: 280,
             align: 'center',
             fixed: 'right',
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} />,
+                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} >
+                    编辑
+                </Button>,
+
                 <Popconfirm
                     key='popconfirm'
                     title={PopconfirmTitle}
@@ -146,7 +103,9 @@ const Index: React.FC<IndexProps> = (props) => {
                     cancelText="No"
                     onConfirm={() => handleDelete(row?.id)}
                 >
-                    <Button type="link" key='delete' icon={<DeleteOutlined />} />
+                    <Button type="link" key='delete' icon={<DeleteOutlined />} >
+                        删除
+                    </Button>
                 </Popconfirm>,
             ],
         },
@@ -159,36 +118,42 @@ const Index: React.FC<IndexProps> = (props) => {
         <>
             <PageContainer>
                 <ProTable<TableListItem, TableListPagination>
-                    scroll={{ x: 1700 }}
+                    // scroll={{ x: 1300 }}
                     defaultSize={size}
                     columns={columns}
                     actionRef={actionRef}
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
                     pagination={{
-                        pageSize: 5,
+                        defaultPageSize: 5,
+                        showSizeChanger: true,
                     }}
                     toolbar={{
-                        menu: {
-                            type: 'tab',
-                            activeKey: activeKey,
+                        multipleLine: true,
+                        tabs: {
+                            activeKey,
+                            onChange: (key) => {
+                                setActiveKey(key)
+                                actionRef.current.reload()
+                            },
                             items: [
                                 {
-                                    key: 'tab1',
-                                    label: <span>应用{renderBadge(99, activeKey === 'tab1')}</span>,
+                                    key: '1',
+                                    tab: '投稿集锦',
                                 },
                                 {
-                                    key: 'tab2',
-                                    label: <span>项目{renderBadge(30, activeKey === 'tab2')}</span>,
+                                    key: '2',
+                                    tab: '赛事新闻',
                                 },
                                 {
-                                    key: 'tab3',
-                                    label: <span>文章{renderBadge(30, activeKey === 'tab3')}</span>,
+                                    key: '3',
+                                    tab: '合作培训',
+                                },
+                                {
+                                    key: '4',
+                                    tab: '精选课程',
                                 },
                             ],
-                            onChange: (key) => {
-                                setActiveKey(key as string);
-                            },
                         },
                     }}
                     dateFormatter="string"
@@ -205,7 +170,7 @@ const Index: React.FC<IndexProps> = (props) => {
                 />
             </PageContainer>
             {
-                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} /> : null
+                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} activeKey={activeKey} /> : null
             }
         </>
     );

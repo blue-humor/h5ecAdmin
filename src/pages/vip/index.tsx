@@ -1,108 +1,97 @@
-import { ProList } from '@ant-design/pro-components';
-import { Button, Space, Tag } from 'antd';
-import request from 'umi-request';
+import React, { useRef, useState } from 'react';
 
-type GithubIssueItem = {
-    url: string;
-    id: number;
-    number: number;
-    title: string;
-    labels: {
-        name: string;
-        color: string;
-    }[];
-    state: string;
-    comments: number;
-    created_at: string;
-    updated_at: string;
-    closed_at?: string;
+
+import { PageContainer, ProList } from '@ant-design/pro-components';
+
+import { EditModal } from './commponents/modal';
+
+
+import { reqTableList } from '@/services/vip';
+
+import type { TableListItem, TableListPagination } from './data';
+import type { ActionType } from '@ant-design/pro-table';
+
+interface IndexProps { }
+
+const size: string | any = 'large';
+const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
+
+
+
+const Index: React.FC<IndexProps> = (props) => {
+    const actionRef = useRef<ActionType>();
+
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [row, setRow] = useState<TableListItem>()
+    const handleModal = (show: boolean, row?: TableListItem) => {
+        if (row?.id) {
+            setRow(row)
+        }
+        setIsOpen(show)
+    }
+
+    const handleDelete = (id: number) => {
+
+    }
+
+    const handleTableList = async (params: TableListPagination) => {
+        const res = await reqTableList(params);
+        if (res.code === 200) {
+            return {
+                data: res.data.list,
+                success: true,
+                total: res.data.total,
+            };
+        }
+
+    };
+
+
+    const metas: any = {
+        title: {
+            dataIndex: 'nickName',
+            title: '用户',
+        },
+        avatar: {
+            dataIndex: 'headimg',
+            search: false,
+        },
+        description: {
+            dataIndex: 'title',
+            search: false,
+        },
+
+    }
+
+
+    return (
+        <>
+            <PageContainer>
+                <ProList<TableListItem>
+                    // toolBarRender={() => {
+                    //     return [
+                    //         <Button key="3" type="primary">
+                    //             新建
+                    //         </Button>,
+                    //     ];
+                    // }}
+                    search={{}}
+                    rowKey="id"
+                    request={async (params): Promise<any> => handleTableList(params)
+                    }
+                    pagination={{
+                        defaultPageSize: 10,
+                        showSizeChanger: true,
+                    }}
+                    showActions="hover"
+                    metas={metas}
+                />
+            </PageContainer>
+            {
+                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} /> : null
+            }
+        </>
+    );
 };
 
-export default () => (
-    <ProList<GithubIssueItem>
-        toolBarRender={() => {
-            return [
-                <Button key="3" type="primary">
-                    新建
-                </Button>,
-            ];
-        }}
-        search={{}}
-        rowKey="name"
-        headerTitle="基础列表"
-        request={async (params = {}) =>
-            request<{
-                data: GithubIssueItem[];
-            }>('https://proapi.azurewebsites.net/github/issues', {
-                params,
-            })
-        }
-        pagination={{
-            pageSize: 5,
-        }}
-        showActions="hover"
-        metas={{
-            title: {
-                dataIndex: 'user',
-                title: '用户',
-            },
-            avatar: {
-                dataIndex: 'avatar',
-                search: false,
-            },
-            description: {
-                dataIndex: 'title',
-                search: false,
-            },
-            subTitle: {
-                dataIndex: 'labels',
-                render: (_: any, row: any) => {
-                    return (
-                        <Space size={0}>
-                            {row.labels?.map((label: { name: string }) => (
-                                <Tag color="blue" key={label.name}>
-                                    {label.name}
-                                </Tag>
-                            ))}
-                        </Space>
-                    );
-                },
-                search: false,
-            },
-            // actions: {
-            //     render: (text, row) => [
-            //         <a href={row.url} target="_blank" rel="noopener noreferrer" key="link">
-            //             链路
-            //         </a>,
-            //         <a href={row.url} target="_blank" rel="noopener noreferrer" key="warning">
-            //             报警
-            //         </a>,
-            //         <a href={row.url} target="_blank" rel="noopener noreferrer" key="view">
-            //             查看
-            //         </a>,
-            //     ],
-            //     search: false,
-            // },
-            // status: {
-            //     // 自己扩展的字段，主要用于筛选，不在列表中显示
-            //     title: '状态',
-            //     valueType: 'select',
-            //     valueEnum: {
-            //         all: { text: '全部', status: 'Default' },
-            //         open: {
-            //             text: '未解决',
-            //             status: 'Error',
-            //         },
-            //         closed: {
-            //             text: '已解决',
-            //             status: 'Success',
-            //         },
-            //         processing: {
-            //             text: '解决中',
-            //             status: 'Processing',
-            //         },
-            //     },
-            // },
-        }}
-    />
-);
+export default Index;

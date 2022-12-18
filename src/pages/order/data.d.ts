@@ -6,13 +6,15 @@ export type TableListPagination = {
 
 export type TableListItem = {
   name: string;
+  orderId: string | number;
   id: number;
   sum?: number;
   paynum: number | string;
 };
 
 export type EditModalProps = {
+  row?: T;
+  actionRef: any;
   isOpen: boolean;
   handleModal: (params: boolean) => void;
-  row?: T;
 };

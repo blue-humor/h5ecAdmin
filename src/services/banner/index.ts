@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 export async function reqUploadFile(data: any, options?: any): Promise<any> {
-  return request('/v1/uploadFile', {
+  return request('/v1/bannerAddOrUpdate', {
     method: 'POST',
     data,
     ...(options || {}),

@@ -5,10 +5,12 @@ export type TableListPagination = {
 };
 
 export type TableListItem = {
-  name: string;
+  thumb: string;
   id: number;
-  teamLogo: thumb;
-  render: any;
+  title: string;
+  soldNum: string | number;
+  price: string | number;
+  originPrice: string | number;
 };
 
 export type EditProps = {
@@ -16,4 +18,10 @@ export type EditProps = {
   handleModal: (params: boolean) => void;
   row?: T;
   actionRef: any;
+};
+
+export type Option = {
+  value: string | number;
+  label: string;
+  children?: Option[];
 };

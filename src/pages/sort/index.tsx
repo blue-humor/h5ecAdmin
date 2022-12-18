@@ -22,6 +22,10 @@ const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 const Index: React.FC<IndexProps> = (props) => {
     const actionRef = useRef<any>()
 
+
+
+
+
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<any>()
     const handleModal = (show: boolean, row: any = null) => {
@@ -66,7 +70,9 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} />,
+                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)}>
+                    编辑
+                </Button>,
                 <Popconfirm
                     key='popconfirm'
                     title={PopconfirmTitle}
@@ -75,7 +81,9 @@ const Index: React.FC<IndexProps> = (props) => {
                     cancelText="No"
                     onConfirm={() => handleDelete(row?.id)}
                 >
-                    <Button type="link" key='delete' icon={<DeleteOutlined />} />
+                    <Button type="link" key='delete' icon={<DeleteOutlined />} >
+                        删除
+                    </Button>
                 </Popconfirm>,
             ],
         },
@@ -89,14 +97,17 @@ const Index: React.FC<IndexProps> = (props) => {
             <PageContainer>
                 <ProTable<TableListItem, TableListPagination>
                     // scroll={{ x: 1300 }}
+                    headerTitle='分类列表'
                     defaultSize={size}
                     columns={columns}
                     actionRef={actionRef}
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
                     pagination={{
-                        pageSize: 10,
+                        defaultPageSize: 5,
+                        showSizeChanger: true,
                     }}
+
                     dateFormatter="string"
                     toolBarRender={() => [
                         <Button

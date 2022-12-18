@@ -103,7 +103,8 @@ const Index: React.FC<IndexProps> = (props) => {
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
                     pagination={{
-                        pageSize: 10,
+                        defaultPageSize: 5,
+                        showSizeChanger: true,
                     }}
                     dateFormatter="string"
                     toolBarRender={() => [

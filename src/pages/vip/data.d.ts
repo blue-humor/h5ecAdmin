@@ -6,6 +6,7 @@ export type TableListPagination = {
 
 export type TableListItem = {
   headimg: string;
+  nickName: string;
   id: number;
 };
 

@@ -7,10 +7,12 @@ export type TableListPagination = {
 export type TableListItem = {
   name: string;
   id: number;
+  actionRef: any;
 };
 
 export type EditModalProps = {
+  row?: T;
+  actionRef: any;
   isOpen: boolean;
   handleModal: (params: boolean) => void;
-  row?: T;
 };

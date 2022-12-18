@@ -59,13 +59,18 @@
     path: '/apply',
     name: '报名管理',
     icon: 'Audit',
-    component: './apply',
+    routes: [
+      { path: '/apply/leader', name: '领队列表', component: './apply/leader' },
+      { path: '/apply/member', name: '队员列表', component: './apply/member', hideInMenu: true },
+      { path: '/apply', redirect: '/apply/leader' },
+      { component: './404' },
+    ],
   },
   {
-    path: '/refer',
-    name: '咨询管理',
+    path: '/information',
+    name: '资讯管理',
     icon: 'comment',
-    component: './refer',
+    component: './information',
   },
   {
     path: '/vip',

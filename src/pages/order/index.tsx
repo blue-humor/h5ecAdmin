@@ -1,14 +1,20 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Typography } from 'antd';
+import { Button, Popconfirm, Tag } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
-import { EditModal } from './commponents/modal';
+import { EditModal, Detailmodal } from './commponents/modal';
+import IconFont from '@/utils/iconFont';
+
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
+
+import { reqTableList } from '@/services/order';
+import commonStyles from '@/common/css/index.less';
+import styles from './index.less';
 
 interface IndexProps { }
 
@@ -16,42 +22,23 @@ const size: string | any = 'large';
 const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
-const data = [
-    {
-        id: '1',
-        name: '父类',
-        children: [
-            {
-                id: '2',
-                name: '子类',
-                children: [
-                    {
-                        name: '子子类'
-                    }
-                ]
-            }
-        ]
-    }
-]
 
-const getData = () => {
-    let data = []
-    for (let i = 0; i < 100; i++) {
-        data.push({ id: i, orderId: '10000012' + i, sum: 1000 + i, createDate: Date.now(), paynum: 8213802183 + 1, status: '-1' })
-    }
-    return data
-}
 
 const Index: React.FC<IndexProps> = (props) => {
     const actionRef = useRef<ActionType>();
 
+    //编辑
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<TableListItem>()
-    const handleModal = (show: boolean, row?: TableListItem) => {
-        if (row?.id) {
-            setRow(row)
-        }
+    const handleModal = (show: boolean, row: any = null) => {
+        setRow(row)
         setIsOpen(show)
+    }
+    //详情
+    const [isDatailOpen, setIsDatailOpen] = useState<boolean>(false)
+    const handleDetailModal = (show: boolean, row: any = null) => {
+        setRow(row)
+        setIsDatailOpen(show)
     }
 
     const handleDelete = (id: number) => {
@@ -59,20 +46,15 @@ const Index: React.FC<IndexProps> = (props) => {
     }
 
     const handleTableList = async (params: TableListPagination) => {
-        // const res = await reqTableList(params);
-        // if (res.code === '200') {
-        //     return {
-        //         data: res.data.list,
-        //         success: true,
-        //         total: res.data.total,
-        //     };
-        // }
-        const data = getData()
-        return {
-            data: data,
-            success: true,
-            total: data.length,
-        };
+        const res = await reqTableList(params);
+        if (res.code === 200) {
+            const { list, total } = res?.data
+            return {
+                data: list,
+                success: true,
+                total,
+            };
+        }
     };
 
     /**
@@ -82,7 +64,7 @@ const Index: React.FC<IndexProps> = (props) => {
      */
 
 
-    const columns: ProColumns<TableListItem>[] = [
+    const columns: ProColumns<any>[] = [
         {
             title: '序号',
             dataIndex: 'index',
@@ -90,40 +72,33 @@ const Index: React.FC<IndexProps> = (props) => {
             width: 80,
         },
         {
+
             title: '订单号',
-            dataIndex: 'orderId',
+            dataIndex: 'orderNo',
             valueType: 'textarea',
             copyable: true,
-
         },
         {
             title: '状态',
-            dataIndex: 'status',
-            // valueType: 'textarea',
+            dataIndex: 'orderStatus',
             valueEnum: {
-                '-1': { text: '关闭', status: 'Default' },
-                '2': { text: '运行中', status: 'Processing' },
-                3: { text: '已上线', status: 'Success' },
-                4: { text: '异常', status: 'Error' },
+                '-1': { text: '全部', status: 'Default' },
+                '5': { text: '待付款', status: 'Default' },
+                '10': { text: '待发货', status: 'Error' },
+                "40": { text: '待收货', status: 'Processing' },
+                "50": { text: '已完成', status: 'Success' },
             },
 
         },
         {
-            title: '金额',
-            dataIndex: 'sum',
+            title: '商品总额',
+            dataIndex: 'totalAmount',
             // valueType: 'textarea',
             copyable: true,
             hideInSearch: true,
-            render: (_, row) => {
-                return <Typography.Text type="danger">
-                    ${row?.sum}
-                </Typography.Text>
-            }
-        },
-        {
-            title: '支付时间',
-            dataIndex: 'createDate',
-            hideInSearch: true,
+            render: (_, row) => <Tag className={`${commonStyles.shaded} ${styles.tagColor}`}>
+                ￥{row?.totalAmount}
+            </Tag>
         },
         {
             title: '支付单号',
@@ -131,27 +106,24 @@ const Index: React.FC<IndexProps> = (props) => {
             hideInSearch: true,
         },
         {
+            title: '支付时间',
+            dataIndex: 'createTime',
+            hideInSearch: true,
+        },
+
+        {
             width: 280,
             align: 'center',
             fixed: 'right',
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button type="link" key='edit' onClick={() => handleModal(true, row)} >
+                <Button type="text" key='edit' onClick={() => handleDetailModal(true, row)} icon={<IconFont type='icon-xiangqing1' />}>
                     详情
                 </Button>,
-                <Popconfirm
-                    key='popconfirm'
-                    title={PopconfirmTitle}
-                    placement="topRight"
-                    okText="Yes"
-                    cancelText="No"
-                    onConfirm={() => handleDelete(row?.id)}
-                >
-                    <Button type="link" key='delete' >
-                        发货
-                    </Button>
-                </Popconfirm>,
+                <Button type="link" key='delete' onClick={() => handleModal(true, row)} icon={<FormOutlined />}>
+                    编辑
+                </Button>
             ],
         },
 
@@ -170,23 +142,27 @@ const Index: React.FC<IndexProps> = (props) => {
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
                     pagination={{
-                        pageSize: 10,
+                        defaultPageSize: 5,
+                        showSizeChanger: true,
                     }}
                     dateFormatter="string"
-                    toolBarRender={() => [
-                        <Button
-                            key="button"
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            // size={size}
-                            onClick={() => handleModal(true)}
-                        >
-                            新建
-                        </Button>]}
+                // toolBarRender={() => [
+                //     <Button
+                //         key="button"
+                //         type="primary"
+                //         icon={<PlusOutlined />}
+                //         // size={size}
+                //         onClick={() => handleModal(true)}
+                //     >
+                //         新建
+                //     </Button>]}
                 />
             </PageContainer>
             {
-                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} /> : null
+                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} /> : null
+            }
+            {
+                isDatailOpen ? <Detailmodal isDatailOpen={isDatailOpen} handleDetailModal={handleDetailModal} row={row} /> : null
             }
         </>
     );

@@ -7,9 +7,9 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
-import { reqTableList } from '@/services/msc';
+import { reqTableList } from '@/services/banner';
 
-import type { TableListItem, TableListPagination } from './data';
+import type { TableListItem, TableListPagination } from '../data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 interface IndexProps { }
@@ -18,8 +18,9 @@ const size: string | any = 'large';
 const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
+
 const Index: React.FC<IndexProps> = (props) => {
-    const actionRef = useRef<any>()
+    const actionRef = useRef<ActionType>()
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<any>()
@@ -41,6 +42,8 @@ const Index: React.FC<IndexProps> = (props) => {
                 total: res.data.total,
             };
         }
+
+
     };
 
     /**
@@ -51,14 +54,12 @@ const Index: React.FC<IndexProps> = (props) => {
 
 
     const columns: ProColumns<TableListItem>[] = [
-
         {
-            title: '商店名',
-            dataIndex: 'storeName',
-            copyable: true,
+            title: '标题',
+            dataIndex: 'fileName',
             valueType: 'textarea',
+            copyable: true,
         },
-
         {
             width: 280,
             align: 'center',
@@ -66,7 +67,9 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} />,
+                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} >
+                    编辑
+                </Button>,
                 <Popconfirm
                     key='popconfirm'
                     title={PopconfirmTitle}
@@ -75,7 +78,9 @@ const Index: React.FC<IndexProps> = (props) => {
                     cancelText="No"
                     onConfirm={() => handleDelete(row?.id)}
                 >
-                    <Button type="link" key='delete' icon={<DeleteOutlined />} />
+                    <Button type="link" key='delete' icon={<DeleteOutlined />}>
+                        删除
+                    </Button>
                 </Popconfirm>,
             ],
         },
@@ -89,13 +94,15 @@ const Index: React.FC<IndexProps> = (props) => {
             <PageContainer>
                 <ProTable<TableListItem, TableListPagination>
                     // scroll={{ x: 1300 }}
+                    headerTitle='队员信息'
                     defaultSize={size}
                     columns={columns}
                     actionRef={actionRef}
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
                     pagination={{
-                        pageSize: 10,
+                        defaultPageSize: 5,
+                        showSizeChanger: true,
                     }}
                     dateFormatter="string"
                     toolBarRender={() => [
