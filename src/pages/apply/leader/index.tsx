@@ -75,50 +75,52 @@ const Index: React.FC<IndexProps> = (props) => {
             dataIndex: 'teamName',
             copyable: true,
             ellipsis: true,
-            width: 150,
+            width: 180,
             fixed: 'left',
         },
         {
-
+            align: 'center',
             title: '领队姓名',
             dataIndex: 'leader',
             ellipsis: true,
             hideInSearch: true,
         },
         {
-
+            align: 'center',
             title: '性别',
             dataIndex: 'sex',
             hideInSearch: true,
         },
         {
-
+            align: 'center',
             title: '队伍类型',
             dataIndex: 'groupName',
             hideInSearch: true,
         },
         {
-
+            align: 'center',
             title: '参赛项目',
             dataIndex: 'projectNames',
             hideInSearch: true,
         },
         {
             width: 180,
+            align: 'center',
             title: '联系电话',
             dataIndex: 'contactPhone',
             hideInSearch: true,
         },
         {
             width: 240,
+            align: 'center',
             title: '身份证号码',
-            dataIndex: 'contactPhone',
+            dataIndex: 'idNo',
             hideInSearch: true,
         },
 
         {
             width: 200,
-
+            align: 'center',
             title: '创建时间',
             dataIndex: 'createDatetime',
             hideInSearch: true,

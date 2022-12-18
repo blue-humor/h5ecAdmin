@@ -69,7 +69,7 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '序号',
             dataIndex: 'index',
             valueType: 'indexBorder',
-            width: 80,
+            width: 60,
         },
         {
 
@@ -79,6 +79,7 @@ const Index: React.FC<IndexProps> = (props) => {
             copyable: true,
         },
         {
+            align: 'center',
             title: '状态',
             dataIndex: 'orderStatus',
             valueEnum: {
@@ -91,6 +92,7 @@ const Index: React.FC<IndexProps> = (props) => {
 
         },
         {
+            align: 'center',
             title: '商品总额',
             dataIndex: 'totalAmount',
             // valueType: 'textarea',
@@ -101,11 +103,14 @@ const Index: React.FC<IndexProps> = (props) => {
             </Tag>
         },
         {
+            width: 200,
+            align: 'center',
             title: '支付单号',
-            dataIndex: 'paynum',
             hideInSearch: true,
         },
         {
+            width: 200,
+            align: 'center',
             title: '支付时间',
             dataIndex: 'createTime',
             hideInSearch: true,
@@ -118,7 +123,7 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button type="text" key='edit' onClick={() => handleDetailModal(true, row)} icon={<IconFont type='icon-xiangqing1' />}>
+                <Button type="link" key='details' onClick={() => handleDetailModal(true, row)} icon={<IconFont type='icon-xiangqing2' />}>
                     详情
                 </Button>,
                 <Button type="link" key='delete' onClick={() => handleModal(true, row)} icon={<FormOutlined />}>

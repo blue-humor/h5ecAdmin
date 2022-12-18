@@ -67,7 +67,7 @@ const Index: React.FC<IndexProps> = (props) => {
   const columns: ProColumns<TableListItem>[] = [
 
     {
-      width: 150,
+      width: 100,
       title: '商品图',
       align: 'center',
       fixed: 'left',
@@ -79,10 +79,11 @@ const Index: React.FC<IndexProps> = (props) => {
       dataIndex: 'title',
       copyable: true,
       ellipsis: true,
-      width: 280,
+      width: 200,
       fixed: 'left',
     },
     {
+      width: 100,
       align: 'center',
       title: '现价',
       dataIndex: 'price',
@@ -92,6 +93,7 @@ const Index: React.FC<IndexProps> = (props) => {
       </Tag>
     },
     {
+      width: 100,
       align: 'center',
       title: '原价',
       dataIndex: 'originPrice',
@@ -101,9 +103,12 @@ const Index: React.FC<IndexProps> = (props) => {
       </Tag>
     },
     {
+      width: 100,
+      align: 'center',
       title: '库存',
       dataIndex: 'soldNum',
       hideInSearch: true,
+
       render: (_, row) => <Tag className={styles.homeSoldNum}>
         {row?.soldNum}件
       </Tag>
@@ -113,14 +118,8 @@ const Index: React.FC<IndexProps> = (props) => {
     //   dataIndex: 'sales',
     //   hideInSearch: true,
     // },
-
     {
-      title: '创建时间',
-      dataIndex: 'created_at',
-      hideInSearch: true,
-    },
-    {
-      width: 280,
+      width: 180,
       align: 'center',
       fixed: 'right',
       title: '操作',
@@ -152,7 +151,7 @@ const Index: React.FC<IndexProps> = (props) => {
     <>
       <PageContainer>
         <ProTable<TableListItem, TableListPagination>
-          scroll={{ x: 1300 }}
+          // scroll={{ x: 1300 }}
           defaultSize={size}
           columns={columns}
           actionRef={actionRef}

@@ -77,15 +77,15 @@ const Index: React.FC<IndexProps> = (props) => {
 
         {
             width: 280,
-            ellipsis: true,
             title: '文章视频',
             dataIndex: 'video',
             hideInSearch: true,
+            ellipsis: true,
             render: (_, row) => <Typography.Link target='_blank' href={row?.video} >{row?.video}</Typography.Link>
         },
 
         {
-            width: 280,
+            width: 180,
             align: 'center',
             fixed: 'right',
             title: '操作',

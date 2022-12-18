@@ -1,33 +1,53 @@
 import React, { useState, useEffect } from 'react';
 
-import { Modal, message, Skeleton, Segmented, Card, Image, Badge, Descriptions } from 'antd'
+import { Modal, message, Skeleton, Segmented, Card, Image, Badge, Descriptions, Drawer, Avatar, Row } from 'antd'
 
-import { ProForm, } from '@ant-design/pro-components';
+import { ProForm, FooterToolbar } from '@ant-design/pro-components';
 
-import type { EditModalProps } from '../data';
+import { handleStatus } from '@/utils/index';
+import IconFont from '@/utils/iconFont';
 
 import { reqUpdateOrderStatus } from '@/services/order';
+import type { EditModalProps } from '../data';
 
 import styles from '../index.less';
 
 const options = [
     {
-        label: '待付款',
+        label: (<div style={{ padding: '10px 20px' }}>
+            <IconFont type='icon-daifukuan' style={{ fontSize: '40px' }} />
+            <div>待付款</div>
+        </div>
+        ),
         value: '5',
     },
     {
-        label: '待发货',
+        label: (<div style={{ padding: '10px 20px' }}>
+            <IconFont type='icon-daifahuo' style={{ fontSize: '40px' }} />
+            <div>待发货</div>
+        </div>
+        ),
         value: '10',
     },
     {
-        label: '待收货',
+        label: (<div style={{ padding: '10px 20px' }}>
+            <IconFont type='icon-daishouhuo' style={{ fontSize: '40px' }} />
+            <div>待收货</div>
+        </div>
+        ),
         value: '40',
     },
     {
-        label: '已完成',
+        label: (<div style={{ padding: '10px 20px' }}>
+            <IconFont type='icon-yiwancheng' style={{ fontSize: '40px' }} />
+            <div>已完成</div>
+        </div>
+        ),
         value: '50',
     },
 ]
+
+
 
 const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionRef }) => {
     const [initialValues, setinitialValues] = useState<any>(null)
@@ -52,11 +72,11 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionR
 
     useEffect(() => {
         if (row?.id) {
-            const { orderStatus, orderNo } = row
-            console.log(orderStatus);
+            const { orderStatus, orderNo, } = row
+            console.log(orderStatus * 1,);
 
             setinitialValues({
-                orderStatus,
+                orderStatus: orderStatus,
                 orderNo
             })
         }
@@ -64,15 +84,15 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionR
 
     return (
         <>
-            <Modal title={title} visible={isOpen} onCancel={() => handleModal(false)} footer={null} destroyOnClose={true}>
+            <Modal title={title} open={isOpen} onCancel={() => handleModal(false)} footer={null} destroyOnClose={true}>
                 {
                     initialValues === null && row?.id ? <Skeleton active paragraph={{ rows: 6 }} /> :
                         <ProForm
                             initialValues={initialValues}
                             onFinish={(values): Promise<any> => handleOnFinish(values)}>
                             {/* <ProFormText name="orderNo" disabled label="订单号" initialValue="启途" /> */}
-                            <ProForm.Item name="orderStatus" label="订单状态"  >
-                                <Segmented options={options} />
+                            <ProForm.Item name="orderStatus" label="订单状态" tooltip='点击修改订单状态' >
+                                <Segmented options={options} onResize={undefined} onResizeCapture={undefined} />
                             </ProForm.Item>
                         </ProForm>
                 }
@@ -85,16 +105,14 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionR
 
 const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) => {
     const [initialValues, setinitialValues] = useState<any>(null)
-
-    const title = '订单详情'
-
     useEffect(() => {
         if (row?.id) {
-            const { orderStatusName, orderNo, createTime } = row
+            const { orderStatusName, orderStatus, orderNo, createTime } = row
             console.log(row);
 
             setinitialValues({
                 orderStatusName,
+                orderStatus,
                 createTime,
                 orderNo
             })
@@ -103,7 +121,7 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
 
     return (
         <>
-            <Modal width={700} title={title} visible={isDatailOpen} onCancel={() => handleDetailModal(false)} footer={null} destroyOnClose={true}>
+            <Drawer width={800} open={isDatailOpen} onClose={() => handleDetailModal(false)}>
                 <Card className={`${styles.shaded} ${styles.orderCard}`}>
                     <Descriptions title={`订单号:${initialValues?.orderNo}`} layout="vertical" bordered>
                         <Descriptions.Item label="商品图" span={6}>
@@ -116,7 +134,7 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
                         <Descriptions.Item label="订单数量">2</Descriptions.Item>
                         <Descriptions.Item label="下单时间" span={6}>{initialValues?.createTime}</Descriptions.Item>
                         <Descriptions.Item label="订单状态" span={6}>
-                            <Badge status="processing" text={initialValues?.orderStatusName} />
+                            <Badge status={handleStatus(initialValues?.orderStatus)} text={initialValues?.orderStatusName} />
                         </Descriptions.Item>
                         <Descriptions.Item label="商品金额">$80.00</Descriptions.Item>
                         <Descriptions.Item label="运费">$20.00</Descriptions.Item>
@@ -132,7 +150,7 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
 
 
                 </Card>
-            </Modal >
+            </Drawer>
 
         </>
     );
