@@ -55,6 +55,7 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     logo: '',
+    // menu: { defaultOpenAll: true, hideMenuWhenCollapsed: true, ignoreFlatMenu: true },
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {

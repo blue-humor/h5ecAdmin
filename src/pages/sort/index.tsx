@@ -14,7 +14,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 interface IndexProps { }
 
-const size: string | any = 'large';
+const size: string | any = 'small';
 const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
@@ -104,7 +104,7 @@ const Index: React.FC<IndexProps> = (props) => {
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
                     pagination={{
-                        defaultPageSize: 5,
+                        defaultPageSize: 10,
                         showSizeChanger: true,
                     }}
 

@@ -121,11 +121,11 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
 
     return (
         <>
-            <Drawer width={800} open={isDatailOpen} onClose={() => handleDetailModal(false)}>
+            <Drawer width={700} open={isDatailOpen} onClose={() => handleDetailModal(false)}>
                 <Card className={`${styles.shaded} ${styles.orderCard}`}>
                     <Descriptions title={`订单号:${initialValues?.orderNo}`} layout="vertical" bordered>
                         <Descriptions.Item label="商品图" span={6}>
-                            <Image placeholder width={'100%'} height={200} src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
+                            <Image placeholder width={'300px'} src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
                         </Descriptions.Item>
                         <Descriptions.Item label="商户名称" >2</Descriptions.Item>
                         <Descriptions.Item label="商品名称" span={3}>【真】白色短袖连衣裙荷叶边裙摆宽松韩版休闲纯白清爽优雅连衣裙</Descriptions.Item>
@@ -136,9 +136,9 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
                         <Descriptions.Item label="订单状态" span={6}>
                             <Badge status={handleStatus(initialValues?.orderStatus)} text={initialValues?.orderStatusName} />
                         </Descriptions.Item>
-                        <Descriptions.Item label="商品金额">$80.00</Descriptions.Item>
-                        <Descriptions.Item label="运费">$20.00</Descriptions.Item>
-                        <Descriptions.Item label="商品总额">$60.00</Descriptions.Item>
+                        <Descriptions.Item label="商品金额">￥80.00</Descriptions.Item>
+                        <Descriptions.Item label="运费">￥20.00</Descriptions.Item>
+                        <Descriptions.Item label="商品总额">￥60.00</Descriptions.Item>
                         <Descriptions.Item label="收件人地址" span={5}>{initialValues?.createTime}</Descriptions.Item>
                         <Descriptions.Item label="用户备注">
                             Data disk type: MongoDB

@@ -16,7 +16,7 @@ import type { ProColumns } from '@ant-design/pro-table';
 
 interface IndexProps { }
 
-const size: string | any = 'large';
+const size: string | any = 'small';
 const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
@@ -58,11 +58,11 @@ const Index: React.FC<IndexProps> = (props) => {
 
     const columns: ProColumns<TableListItem>[] = [
         {
-            width: 150,
+            width: 100,
             title: '文章图片',
             dataIndex: 'thumb',
             hideInSearch: true,
-            render: (_, row) => <Image src={row?.thumb} width={100} />
+            render: (_, row) => <Image src={row?.thumb} width={80} />
         },
 
         {
@@ -85,7 +85,7 @@ const Index: React.FC<IndexProps> = (props) => {
         },
 
         {
-            width: 180,
+            width: 160,
             align: 'center',
             fixed: 'right',
             title: '操作',
