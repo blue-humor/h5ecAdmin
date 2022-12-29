@@ -34,13 +34,7 @@ interface IndexProps {
 }
 
 
-const options: Option[] = [
-    {
-        value: '1',
-        label: '1',
-    },
 
-];
 
 const Index: React.FC<IndexProps> = (props) => {
 
@@ -57,7 +51,7 @@ const Index: React.FC<IndexProps> = (props) => {
     const [descImageList, setDescImageList] = useState<any>([])
 
     const [groupOptions, setGroupOptions] = useState<any>([])
-    const [category, setCategory] = useState<any>([])
+
 
     const [initialValues, setInitialValues] = useState<any>(null)
 
@@ -93,7 +87,7 @@ const Index: React.FC<IndexProps> = (props) => {
             setThumbList(thumb)
             setPrimaryImageList(primaryImage)
             setDescImageList(descImage)
-            setCategory(categoryId)
+
             setInitialValues({
                 price,
                 originPrice,
@@ -172,7 +166,7 @@ const Index: React.FC<IndexProps> = (props) => {
                                 // fieldNames={label: 'name',value: 'id',children:'children'}
                                 /> */}
                                 <ProForm.Item name="categoryId" label="商品分类" tooltip="商品分类是必须选择" rules={goodDetails.category}>
-                                    <Cascader options={groupOptions} placeholder="请选择商品分类" style={{ width: '552px' }} fieldNames={{ label: 'name', value: 'id', children: 'children' }} defaultValue={category} />
+                                    <Cascader placeholder="请选择商品分类" style={{ width: '552px' }} fieldNames={{ label: 'name', value: 'id', children: 'children' }} options={groupOptions} />
                                 </ProForm.Item>
                                 <ProFormText
                                     width="xl"
