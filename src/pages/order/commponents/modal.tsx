@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-import { Modal, message, Skeleton, Segmented, Card, Image, Badge, Descriptions, Drawer, Avatar, Row } from 'antd'
+import { Modal, message, Skeleton, Segmented, Card, Image, Badge, Descriptions, Drawer } from 'antd'
 
-import { ProForm, FooterToolbar } from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-components';
+import ProSkeleton from '@ant-design/pro-skeleton';
 
 import { handleStatus } from '@/utils/index';
 import IconFont from '@/utils/iconFont';
 
-import { reqUpdateOrderStatus } from '@/services/order';
+import { reqUpdateOrderStatus, reqOrderDetails } from '@/services/order';
 import type { EditModalProps } from '../data';
 
 import styles from '../index.less';
@@ -105,51 +106,76 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionR
 
 const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) => {
     const [initialValues, setinitialValues] = useState<any>(null)
-    useEffect(() => {
-        if (row?.id) {
-            const { orderStatusName, orderStatus, orderNo, createTime } = row
-            console.log(row);
+    const handleOrderDetails = async () => {
+        const res = await reqOrderDetails({ id: row?.id })
+        if (res?.code === 200) {
+            const { orderNo, goodsName, goodsPictureUrl, itemPaymentAmount, goodsPaymentPrice, buyQuantity, PaymentAmount, actualPrice } = res?.data?.orderitemList[0]
+            const { createTime, orderStatus, orderStatusName, } = res?.data?.order
+
+            console.log(res?.data?.orderitemList);
 
             setinitialValues({
+                actualPrice,
+                PaymentAmount,
+                goodsPaymentPrice,
+                goodsName,
+                goodsPictureUrl,
+                itemPaymentAmount,
                 orderStatusName,
                 orderStatus,
                 createTime,
-                orderNo
+                orderNo,
+                buyQuantity
             })
+
+        }
+
+    }
+    useEffect(() => {
+        if (row?.id) {
+            handleOrderDetails()
+
+            // setinitialValues({
+            //     orderStatusName,
+            //     orderStatus,
+            //     createTime,
+            //     orderNo
+            // })
         }
     }, [])
 
     return (
         <>
-            <Drawer width={700} open={isDatailOpen} onClose={() => handleDetailModal(false)}>
-                <Card className={`${styles.shaded} ${styles.orderCard}`}>
-                    <Descriptions title={`订单号:${initialValues?.orderNo}`} layout="vertical" bordered>
-                        <Descriptions.Item label="商品图" span={6}>
-                            <Image placeholder width={'300px'} src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
-                        </Descriptions.Item>
-                        <Descriptions.Item label="商户名称" >2</Descriptions.Item>
-                        <Descriptions.Item label="商品名称" span={3}>【真】白色短袖连衣裙荷叶边裙摆宽松韩版休闲纯白清爽优雅连衣裙</Descriptions.Item>
+            <Drawer width={760} open={isDatailOpen} onClose={() => handleDetailModal(false)}>
+                {
+                    initialValues === null && row?.id ? <ProSkeleton type="descriptions" /> : <Card className={`${styles.shaded} ${styles.orderCard}`}>
+                        <Descriptions title={`订单号:${initialValues?.orderNo}`} layout="vertical" bordered>
+                            <Descriptions.Item label="商品图" span={3}>
+                                <Image placeholder width={'300px'} src={initialValues?.goodsPictureUrl} />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="商户名称" >{ }</Descriptions.Item>
+                            <Descriptions.Item label="商品名称" span={3}>{initialValues?.goodsName}</Descriptions.Item>
 
 
-                        <Descriptions.Item label="订单数量">2</Descriptions.Item>
-                        <Descriptions.Item label="下单时间" span={6}>{initialValues?.createTime}</Descriptions.Item>
-                        <Descriptions.Item label="订单状态" span={6}>
-                            <Badge status={handleStatus(initialValues?.orderStatus)} text={initialValues?.orderStatusName} />
-                        </Descriptions.Item>
-                        <Descriptions.Item label="商品金额">￥80.00</Descriptions.Item>
-                        <Descriptions.Item label="运费">￥20.00</Descriptions.Item>
-                        <Descriptions.Item label="商品总额">￥60.00</Descriptions.Item>
-                        <Descriptions.Item label="收件人地址" span={5}>{initialValues?.createTime}</Descriptions.Item>
-                        <Descriptions.Item label="用户备注">
-                            Data disk type: MongoDB
-                            <br />
-                            Database version: 3.4
-                            <br />
-                        </Descriptions.Item>
-                    </Descriptions>
+                            <Descriptions.Item label="商品数量">{initialValues?.buyQuantity}</Descriptions.Item>
+                            <Descriptions.Item label="下单时间" span={6}>{initialValues?.createTime}</Descriptions.Item>
+                            <Descriptions.Item label="订单状态" span={6}>
+                                <Badge status={handleStatus(initialValues?.orderStatus)} text={initialValues?.orderStatusName} />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="商品金额">￥{initialValues?.actualPrice}</Descriptions.Item>
+                            <Descriptions.Item label="运费">{'免运费'}</Descriptions.Item>
+                            <Descriptions.Item label="商品总额">￥{initialValues?.itemPaymentAmount}</Descriptions.Item>
+                            <Descriptions.Item label="收件人地址" span={5}>{ }</Descriptions.Item>
+                            <Descriptions.Item label="用户备注">
+                                { }
+                            </Descriptions.Item>
+                        </Descriptions>
 
 
-                </Card>
+                    </Card>
+
+                }
+
             </Drawer>
 
         </>

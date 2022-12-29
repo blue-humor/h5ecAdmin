@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
+import { history } from 'umi';
 
-import { Button, Popconfirm, Image } from 'antd';
+import { Button, Popconfirm, Image, message } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
-import { reqTableList } from '@/services/banner';
+import { reqTableList, reqDel } from '@/services/member';
 
 import type { TableListItem, TableListPagination } from '../data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -20,7 +21,9 @@ const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
 const Index: React.FC<IndexProps> = (props) => {
-    const actionRef = useRef<ActionType>()
+    const actionRef = useRef<any>()
+
+    const { id, type, teamName } = history.location.query as { id: string, type: string, teamName: string }
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<any>()
@@ -29,12 +32,18 @@ const Index: React.FC<IndexProps> = (props) => {
         setIsOpen(show)
     }
 
-    const handleDelete = (id: number) => {
 
+
+    const handleDelete = async (id: number) => {
+        const res = await reqDel({ id })
+        if (res?.code === 200) {
+            message.success(res?.message)
+            actionRef?.current.reload()
+        }
     }
 
     const handleTableList = async (params: TableListPagination) => {
-        const res = await reqTableList(params);
+        const res = await reqTableList({ ...params, type, parentId: id });
         if (res.code === 200) {
             return {
                 data: res.data.list,
@@ -53,13 +62,56 @@ const Index: React.FC<IndexProps> = (props) => {
      */
 
 
+    const handlePageTitle = () => {
+        switch (type) {
+            case '1': return "校内参赛队"
+            case '2': return "非校内参赛队"
+            case '3': return "邀请赛俱乐部"
+        }
+    }
+
+
+    const campus: any = [
+        {
+            align: 'center',
+            title: '队员所属学校',
+            dataIndex: 'colleageName',
+            hideInSearch: true,
+        },
+        {
+            align: 'center',
+            title: '未成年监护人姓名',
+            dataIndex: 'supervisorName',
+            hideInSearch: true,
+        },
+        {
+            title: '未成年监护人身份证号',
+            dataIndex: 'supervisorIdNo',
+            hideInSearch: true,
+        }
+    ]
+
     const columns: ProColumns<TableListItem>[] = [
         {
-            title: '标题',
-            dataIndex: 'fileName',
-            valueType: 'textarea',
+
+            title: '队员姓名',
+            dataIndex: 'name',
+
             copyable: true,
         },
+        {
+            align: 'center',
+            title: '队员性别',
+            dataIndex: 'sex',
+            hideInSearch: true,
+        },
+        {
+            align: 'center',
+            title: '队员身份证号',
+            dataIndex: 'idNo',
+            hideInSearch: true,
+        },
+
         {
             width: 280,
             align: 'center',
@@ -84,19 +136,17 @@ const Index: React.FC<IndexProps> = (props) => {
                 </Popconfirm>,
             ],
         },
-
-
     ]
 
 
     return (
         <>
-            <PageContainer>
+            <PageContainer title={handlePageTitle()}>
                 <ProTable<TableListItem, TableListPagination>
                     // scroll={{ x: 1300 }}
-                    headerTitle='队员信息'
+                    headerTitle={`${teamName} 队员信息列表`}
                     defaultSize={size}
-                    columns={columns}
+                    columns={type === '1' ? [...columns, ...campus] : columns}
                     actionRef={actionRef}
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"

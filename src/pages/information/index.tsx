@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Image, Typography } from 'antd';
+import { Button, Popconfirm, Image, Typography, message } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -8,7 +8,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { EditModal } from './commponents/modal';
 
 
-import { reqTableList } from '@/services/information';
+import { reqTableList, reqDetaleArticle } from '@/services/information';
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ProColumns } from '@ant-design/pro-table';
@@ -32,8 +32,13 @@ const Index: React.FC<IndexProps> = (props) => {
         setIsOpen(show)
     }
 
-    const handleDelete = (id: number) => {
+    const handleDelete = async (id: number) => {
 
+        const res = await reqDetaleArticle({ id })
+        if (res?.code === 200) {
+            message.success(res?.message)
+            actionRef?.current.reload()
+        }
     }
 
 
@@ -62,7 +67,7 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '文章图片',
             dataIndex: 'thumb',
             hideInSearch: true,
-            render: (_, row) => <Image src={row?.thumb} width={80} />
+            render: (_, row) => <Image src={row?.thumb[0]?.url} width={80} />
         },
 
         {
@@ -81,7 +86,7 @@ const Index: React.FC<IndexProps> = (props) => {
             dataIndex: 'video',
             hideInSearch: true,
             ellipsis: true,
-            render: (_, row) => <Typography.Link target='_blank' href={row?.video} >{row?.video}</Typography.Link>
+            render: (_, row) => <Typography.Link target='_blank' href={row?.video[0]?.url} >{row?.video[0]?.url}</Typography.Link>
         },
 
         {

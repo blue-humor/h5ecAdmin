@@ -75,7 +75,7 @@ const Index: React.FC<IndexProps> = (props) => {
 
             title: '订单号',
             dataIndex: 'orderNo',
-            valueType: 'textarea',
+
             copyable: true,
         },
         {
@@ -89,13 +89,12 @@ const Index: React.FC<IndexProps> = (props) => {
                 "40": { text: '待收货', status: 'Processing' },
                 "50": { text: '已完成', status: 'Success' },
             },
-
         },
         {
             align: 'center',
             title: '商品总额',
             dataIndex: 'totalAmount',
-            // valueType: 'textarea',
+            //  ,
             copyable: true,
             hideInSearch: true,
             render: (_, row) => <Tag className={`${commonStyles.shaded} ${styles.tagColor}`}>

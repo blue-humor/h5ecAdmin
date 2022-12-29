@@ -7,7 +7,8 @@ import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
-import { reqTableList } from '@/services/goods';
+import { reqTableList, reqDelete } from '@/services/goods';
+import { priceFormat } from '@/utils/index';
 
 import type { TableListItem, TableListPagination } from '../data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -29,8 +30,11 @@ const Index: React.FC<IndexProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [row, setRow] = useState<TableListItem>()
 
-  const handleDelete = (id: number) => {
-
+  const handleDelete = async (id: number) => {
+    const res = await reqDelete({ id })
+    if (res?.code === 200) {
+      actionRef?.current.reload()
+    }
   }
   const handleAddPush = () => {
     history.push({
@@ -89,7 +93,7 @@ const Index: React.FC<IndexProps> = (props) => {
       dataIndex: 'price',
       hideInSearch: true,
       render: (_, row) => <Tag className={styles.homeTagPrice}>
-        ￥{row?.price}
+        ￥{priceFormat(row?.price, 2)}
       </Tag>
     },
     {
@@ -99,7 +103,7 @@ const Index: React.FC<IndexProps> = (props) => {
       dataIndex: 'originPrice',
       hideInSearch: true,
       render: (_, row) => <Tag className={styles.homeTagOriginal}>
-        ￥{row?.originPrice}
+        ￥{priceFormat(row?.originPrice, 2)}
       </Tag>
     },
     {

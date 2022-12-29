@@ -7,7 +7,7 @@ import { ProFormText, ProForm, ProFormTextArea, ProFormUploadButton } from '@ant
 
 import Upload from '@/components/Upload';
 
-import { referRule } from '@/utils/rules';
+import { information } from '@/utils/rules';
 import type { EditModalProps, TableListItem } from '../data';
 
 import { reqAddArticle, reqUpdateArticle } from '@/services/information';
@@ -52,8 +52,8 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, activeKey, handleMod
         if (row?.id) {
             const { title, content, thumb, video } = row
 
-            thumb ? setFileThumb([{ url: thumb }]) : null
-            video ? setFileVideo([{ name: video, url: video }]) : null
+            setFileThumb(thumb)
+            setFileVideo(video)
 
             setinitialValues({
                 title,
@@ -74,7 +74,7 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, activeKey, handleMod
                             form={formObj}
                             initialValues={initialValues}
                             onFinish={(values): Promise<any> => row?.id ? handleEditor(values) : handleAdd(values)}>
-                            <ProFormText name="title" label="文章标题" placeholder="请输入文章标题" tooltip='文章标题是必填项' rules={referRule.title} />
+                            <ProFormText name="title" label="文章标题" placeholder="请输入文章标题" tooltip='文章标题是必填项' rules={information.title} />
                             <ProFormTextArea name="content" label="文章详情" placeholder="请输入文章详情" tooltip='文章详情' />
 
                             <ProForm.Item label="视频上传" name="video">

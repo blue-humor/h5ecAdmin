@@ -6,9 +6,9 @@ export type TableListPagination = {
 
 export type TableListItem = {
   title: string;
-  thumb: string;
+  thumb: any;
   type: string;
-  video: string;
+  video: any;
   content: string;
   id: number;
 };

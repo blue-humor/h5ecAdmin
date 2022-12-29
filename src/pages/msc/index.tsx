@@ -64,7 +64,7 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '商店名',
             dataIndex: 'storeName',
             copyable: true,
-            valueType: 'textarea',
+
         },
 
         {

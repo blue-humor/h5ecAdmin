@@ -8,7 +8,7 @@ export type TableListItem = {
   fileName: string;
   id: number;
   row?: any;
-  fileUrl: string;
+  fileUrl: any;
 };
 
 export type EditModalProps = {

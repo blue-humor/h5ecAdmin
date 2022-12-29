@@ -32,7 +32,7 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal }) => {
 
     return (
         <>
-            <Modal width={800} title={title} visible={isOpen} onCancel={() => handleModal(false)} footer={null} destroyOnClose={true}>
+            <Modal width={800} title={title} open={isOpen} onCancel={() => handleModal(false)} footer={null} destroyOnClose={true}>
                 {
                     initialValues === null && row?.id ? <Skeleton active paragraph={{ rows: 6 }} /> :
                         <ProForm

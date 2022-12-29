@@ -8,6 +8,7 @@ export type TableListItem = {
   name: string;
   id: number;
   teamLogo: string;
+  teamName: string;
 };
 
 export type EditModalProps = {

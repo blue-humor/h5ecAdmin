@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Image } from 'antd';
+import { Button, Popconfirm, Image, message } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
-import { reqTableList } from '@/services/banner';
+import { reqTableList, reqDel } from '@/services/banner';
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -20,7 +20,7 @@ const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
 const Index: React.FC<IndexProps> = (props) => {
-    const actionRef = useRef<ActionType>()
+    const actionRef = useRef<any>()
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<any>()
@@ -29,8 +29,13 @@ const Index: React.FC<IndexProps> = (props) => {
         setIsOpen(show)
     }
 
-    const handleDelete = (id: number) => {
 
+    const handleDelete = async (id: number) => {
+        const res = await reqDel({ id })
+        if (res?.code === 200) {
+            message.success(res?.message)
+            actionRef?.current.reload()
+        }
     }
 
     const handleTableList = async (params: TableListPagination) => {
@@ -61,12 +66,11 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '轮播图片',
             dataIndex: 'fileUrl',
             hideInSearch: true,
-            render: (_, row) => <Image width={80} src={row?.fileUrl} placeholder />
+            render: (_, row) => <Image width={80} src={row?.fileUrl[0]?.url} placeholder />
         },
         {
             title: '标题',
             dataIndex: 'fileName',
-            valueType: 'textarea',
             copyable: true,
         },
         {

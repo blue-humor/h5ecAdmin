@@ -15,3 +15,13 @@ export async function reqTableList(data: any, options?: any): Promise<any> {
         ...(options || {}),
     });
 }
+
+export async function reqDelete(data: any, options?: any): Promise<any> {
+    return request('/v1/delTeam', {
+        method: 'POST',
+        data,
+        ...(options || {}),
+    });
+}
+
+

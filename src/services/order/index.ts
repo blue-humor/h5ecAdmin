@@ -15,3 +15,11 @@ export async function reqUpdateOrderStatus(data: any, options?: any): Promise<an
     ...(options || {}),
   });
 }
+
+export async function reqOrderDetails(data: any, options?: any): Promise<any> {
+  return request('/v1/pc/getOrderById', {
+    method: 'POST',
+    data,
+    ...(options || {}),
+  });
+}

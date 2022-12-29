@@ -15,3 +15,11 @@ export async function reqTableList(data: any, options?: any): Promise<any> {
     ...(options || {}),
   });
 }
+
+export async function reqDel(data: any, options?: any): Promise<any> {
+  return request('/v1/pc/delBanner', {
+    method: 'POST',
+    data,
+    ...(options || {}),
+  });
+}

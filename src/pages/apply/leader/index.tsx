@@ -9,7 +9,7 @@ import { EditModal } from './commponents/modal';
 
 import IconFont from '@/utils/iconFont';
 
-import { reqTableList } from '@/services/apply';
+import { reqTableList, reqDelete } from '@/services/apply';
 
 
 
@@ -35,8 +35,11 @@ const Index: React.FC<IndexProps> = (props) => {
         setIsOpen(show)
     }
 
-    const handleDelete = (id: number) => {
-
+    const handleDelete = async (id: number) => {
+        const res = await reqDelete({ id })
+        if (res?.code === 200) {
+            actionRef?.current.reload()
+        }
     }
 
     const handleTableList = async (params: any) => {
@@ -60,12 +63,19 @@ const Index: React.FC<IndexProps> = (props) => {
      * tooltip 会在 title 之后展示一个 icon，hover 之后提示一些信息
      */
 
+    const typeColumns: any = [{
+        width: 100,
+        title: '学校公章文件',
+        fixed: 'left',
+        hideInSearch: true,
+        render: (_: any, record: { colleageCert: string | undefined; }) => <Image width={64} src={record.colleageCert} />,
+    },]
 
     const columns: ProColumns<TableListItem>[] = [
         {
             width: 100,
             title: 'Logo',
-            fixed: 'left',
+            // fixed: 'left',
             hideInSearch: true,
             render: (_: any, record: { teamLogo: string | undefined; }) => <Image width={64} src={record.teamLogo} />,
         },
@@ -76,7 +86,6 @@ const Index: React.FC<IndexProps> = (props) => {
             copyable: true,
             ellipsis: true,
             width: 180,
-            fixed: 'left',
         },
         {
             align: 'center',
@@ -139,7 +148,8 @@ const Index: React.FC<IndexProps> = (props) => {
                             pathname: '/apply/member',
                             query: {
                                 id: `${row?.id}`,
-                                type: activeKey
+                                type: activeKey,
+                                teamName: row?.teamName
                             }
                         })
                     }}
@@ -171,7 +181,7 @@ const Index: React.FC<IndexProps> = (props) => {
                     // headerTitle='领队列表'
                     scroll={{ x: 1600 }}
                     defaultSize={size}
-                    columns={columns}
+                    columns={activeKey === '1' ? [...typeColumns, ...columns] : columns}
                     actionRef={actionRef}
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"

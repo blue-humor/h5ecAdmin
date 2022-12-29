@@ -12,7 +12,8 @@ export type TableListItem = {
 
 export type EditModalProps = {
   row?: T;
+  type: string;
   actionRef: any;
   isOpen: boolean;
-  handleModal: (params: boolean) => void;
+  handleModal: (params: boolean, row: any, type: string) => void;
 };

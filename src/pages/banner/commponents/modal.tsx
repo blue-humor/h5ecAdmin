@@ -16,6 +16,7 @@ import type { EditModalProps } from '../data';
 
 
 const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionRef }) => {
+    console.log(row);
 
     const title = row?.id ? "修改" : "添加"
     const [formObj] = ProForm.useForm()
@@ -58,7 +59,7 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, handleModal, actionR
     useEffect(() => {
         if (row?.id) {
             const { fileName, fileUrl } = row
-            fileUrl ? setFileUrl([{ url: fileUrl }]) : null
+            setFileUrl(fileUrl)
             setinitialValues({
                 fileName,
                 // 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
