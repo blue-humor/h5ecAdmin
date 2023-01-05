@@ -5,11 +5,14 @@ import { Modal, message, Skeleton, Segmented, Card, Image, Badge, Descriptions, 
 import { ProForm } from '@ant-design/pro-components';
 import ProSkeleton from '@ant-design/pro-skeleton';
 
-import { handleStatus } from '@/utils/index';
+import { handleStatus, priceFormat } from '@/utils/index';
 import IconFont from '@/utils/iconFont';
+
+
 
 import { reqUpdateOrderStatus, reqOrderDetails } from '@/services/order';
 import type { EditModalProps } from '../data';
+
 
 import styles from '../index.less';
 
@@ -110,11 +113,12 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
         const res = await reqOrderDetails({ id: row?.id })
         if (res?.code === 200) {
             const { orderNo, goodsName, goodsPictureUrl, itemPaymentAmount, goodsPaymentPrice, buyQuantity, PaymentAmount, actualPrice } = res?.data?.orderitemList[0]
-            const { createTime, orderStatus, orderStatusName, } = res?.data?.order
+            const { createTime, orderStatus, orderStatusName, remark } = res?.data?.order
+            const { address } = res?.data
 
-            console.log(res?.data?.orderitemList);
 
             setinitialValues({
+                address,
                 actualPrice,
                 PaymentAmount,
                 goodsPaymentPrice,
@@ -153,7 +157,7 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
                             <Descriptions.Item label="商品图" span={3}>
                                 <Image placeholder width={'300px'} src={initialValues?.goodsPictureUrl} />
                             </Descriptions.Item>
-                            <Descriptions.Item label="商户名称" >{ }</Descriptions.Item>
+                            {/* <Descriptions.Item label="商户名称" >{ }</Descriptions.Item> */}
                             <Descriptions.Item label="商品名称" span={3}>{initialValues?.goodsName}</Descriptions.Item>
 
 
@@ -162,12 +166,22 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
                             <Descriptions.Item label="订单状态" span={6}>
                                 <Badge status={handleStatus(initialValues?.orderStatus)} text={initialValues?.orderStatusName} />
                             </Descriptions.Item>
-                            <Descriptions.Item label="商品金额">￥{initialValues?.actualPrice}</Descriptions.Item>
-                            <Descriptions.Item label="运费">{'免运费'}</Descriptions.Item>
-                            <Descriptions.Item label="商品总额">￥{initialValues?.itemPaymentAmount}</Descriptions.Item>
-                            <Descriptions.Item label="收件人地址" span={5}>{ }</Descriptions.Item>
+                            <Descriptions.Item label="商品金额">￥{priceFormat(initialValues?.actualPrice, 2)}</Descriptions.Item>
+                            <Descriptions.Item label="运费">{'0'}</Descriptions.Item>
+                            <Descriptions.Item label="商品总额">￥{priceFormat(initialValues?.itemPaymentAmount, 2)}</Descriptions.Item>
+                            <Descriptions.Item label="收件人地址" span={5}>
+                                姓名：{initialValues?.address?.name}
+                                <br />
+                                手机号：{initialValues?.address?.phone}
+                                <br />
+                                收货地址：
+                                {`${initialValues?.address?.provinceName} 
+                                 ${initialValues?.address?.cityName}
+                                ${initialValues?.address?.detailAddress}`
+                                }
+                            </Descriptions.Item>
                             <Descriptions.Item label="用户备注">
-                                { }
+                                {initialValues?.remark}
                             </Descriptions.Item>
                         </Descriptions>
 

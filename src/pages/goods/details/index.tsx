@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { history, useModel } from 'umi';
+import { history } from 'umi';
 
 import {
     PageContainer,
@@ -10,21 +10,21 @@ import {
     ProFormText,
     FooterToolbar,
     ProFormDigit,
-    ProFormSelect,
-    ProFormTextArea,
+
     ProFormMoney
 } from '@ant-design/pro-components';
 import ProSkeleton from '@ant-design/pro-skeleton';
 
-import { Card, message, Button, Cascader } from 'antd';
+import { Card, message, Button, Cascader, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import Upload from '@/components/Upload';
 
 import { reqAddGoods, reqInfo, reqEdit } from '@/services/goods';
 import { reqTableList } from '@/services/sort';
+import { reqSpecsList } from '@/services/specs';
 
-import { Option } from '../data';
+
 import { goodDetails } from '@/utils/rules';
 import styles from './index.less';
 
@@ -45,13 +45,18 @@ const Index: React.FC<IndexProps> = (props) => {
     const setthumb = (fileKey: any) => formObj.setFieldsValue({ 'thumb': fileKey })
     const setPrimaryImage = (fileKey: any) => formObj.setFieldsValue({ 'primaryImage': fileKey })
     const setDescImage = (fileKey: any) => formObj.setFieldsValue({ 'descImage': fileKey })
+    const setThumbnail = (fileKey: any) => formObj.setFieldsValue({ 'thumbnail': fileKey })
+
+
 
     const [thumbList, setThumbList] = useState<any>([])
     const [primaryImageList, setPrimaryImageList] = useState<any>([])
     const [descImageList, setDescImageList] = useState<any>([])
+    const [thumbnailList, setThumbnailList] = useState<any>([])
+
 
     const [groupOptions, setGroupOptions] = useState<any>([])
-
+    const [specsList, setSpecsList] = useState<any>([])
 
     const [initialValues, setInitialValues] = useState<any>(null)
 
@@ -59,6 +64,7 @@ const Index: React.FC<IndexProps> = (props) => {
 
 
     const handleAddGoods = async (params: any) => {
+        console.log(params);
         const res = await reqAddGoods(params)
         if (res?.code === 200) {
             message.success(res?.message)
@@ -110,7 +116,13 @@ const Index: React.FC<IndexProps> = (props) => {
         if (res?.code === 200) {
             setGroupOptions(res?.data)
         }
+    }
 
+    const handleSpecsList = async () => {
+        const res = await reqSpecsList({})
+        if (res?.code === 200) {
+            setSpecsList(res?.data)
+        }
     }
 
 
@@ -119,6 +131,7 @@ const Index: React.FC<IndexProps> = (props) => {
             handleInfo()
         }
         handleSort()
+        handleSpecsList()
         return () => {
 
         }
@@ -156,15 +169,6 @@ const Index: React.FC<IndexProps> = (props) => {
                     >
                         <Card bordered={false} title={'商品简介'} className={styles.card}>
                             <ProForm.Group>
-                                {/* <ProFormSelect
-                                    width="xl"
-                                    name="groupId"
-                                    label="商品分类"
-                                    placeholder="请选择商品分类"
-                                    tooltip="最长为 24 位"
-                                    options={options}
-                                // fieldNames={label: 'name',value: 'id',children:'children'}
-                                /> */}
                                 <ProForm.Item name="categoryId" label="商品分类" tooltip="商品分类是必须选择" rules={goodDetails.category}>
                                     <Cascader placeholder="请选择商品分类" style={{ width: '552px' }} fieldNames={{ label: 'name', value: 'id', children: 'children' }} options={groupOptions} />
                                 </ProForm.Item>
@@ -210,13 +214,13 @@ const Index: React.FC<IndexProps> = (props) => {
                                 max={99999999}
                                 rules={goodDetails.soldNum}
                             />
-                            <ProFormTextArea
+                            {/* <ProFormTextArea
                                 width="xl"
                                 name="desc"
                                 label="描述"
                                 placeholder="请输入描述"
                                 rules={goodDetails.desc}
-                            />
+                            /> */}
 
                             <ProForm.Item label="上传封面图" name="thumb" rules={goodDetails.thumb}>
                                 <Upload name='file' accept='image/*' listType='picture-card' setKey={setthumb} maxCount={1} fileList={thumbList}>
@@ -257,37 +261,48 @@ const Index: React.FC<IndexProps> = (props) => {
                                         {listDom}
                                     </ProCard>
                                 )}
-                                creatorRecord={{ name: '', items: [{ vlue: '' }] }}
-                                initialValue={[{ name: '', items: [{ vlue: '' }, { vlue: '' }] }]}
+                                // creatorRecord={{ name: '', items: [{ vlue: '' }] }}
+                                initialValue={initialValues?.sku}
                             >
-                                <ProFormText style={{ padding: 0 }} width="md" name="name" label="规格名" />
-                                <ProForm.Item isListField style={{ marginBlockEnd: 0 }} label="规格值">
-                                    <ProFormList
-                                        name="items"
-                                        creatorButtonProps={{
-                                            creatorButtonText: '新建',
-                                            icon: false,
-                                            type: 'link',
-                                            style: { width: 'unset' },
-                                        }}
-                                        min={1}
-                                        copyIconProps={false}
-                                        deleteIconProps={{ tooltipText: '删除' }}
-                                        itemRender={({ listDom, action }) => (
-                                            <div
-                                                style={{
-                                                    display: 'inline-flex',
-                                                    marginInlineEnd: 25,
-                                                }}
-                                            >
-                                                {listDom}
-                                                {action}
-                                            </div>
-                                        )}
-                                    >
-                                        <ProFormText allowClear={false} width="xs" name={['vlue']} />
-                                    </ProFormList>
-                                </ProForm.Item>
+
+                                <ProForm.Group>
+                                    <ProFormText style={{ padding: 0 }} width="md" name="name" label="规格名" placeholder="请输入规格名" />
+                                    <ProFormMoney
+                                        width="md"
+                                        name="price"
+                                        label="价格"
+                                        placeholder="请输入价格"
+                                        min={0}
+                                        max={9999999999999999}
+                                    // rules={[{ required: true, message: '请输入现价价格' }]}
+                                    />
+                                    <ProFormDigit
+                                        width="md"
+                                        name="soldNum"
+                                        label="库存"
+                                        placeholder="请输入库存"
+                                        min={0}
+                                        max={99999999}
+                                        rules={goodDetails.soldNum}
+                                    />
+
+                                </ProForm.Group>
+                                <ProForm.Group>
+                                    {
+                                        specsList?.map((item: any) => {
+                                            return <ProForm.Item key={item?.id} name={item?.key} label={item?.name} tooltip="选择商品规格" rules={goodDetails.category}>
+                                                <Select placeholder={`请选择${item?.name}`} fieldNames={{ label: 'name', value: 'id' }} options={item?.children} />
+                                            </ProForm.Item>
+                                        })
+                                    }
+                                </ProForm.Group>
+                                <ProForm.Group>
+                                    {/* <ProForm.Item label="上传规格图" name="thumbnail" >
+                                        <Upload name='file' accept='image/*' listType='picture-card' setKey={setThumbnail} maxCount={1} fileList={thumbnailList}>
+                                            <Button type='link' icon={<UploadOutlined />}>上传图片</Button>
+                                        </Upload>
+                                    </ProForm.Item> */}
+                                </ProForm.Group>
                             </ProFormList>
                         </Card>
 

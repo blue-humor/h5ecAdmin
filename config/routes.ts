@@ -26,12 +26,12 @@
     icon: 'Appstore',
     component: './sort',
   },
-  {
-    path: '/msc',
-    name: '商户管理',
-    icon: 'shop',
-    component: './msc',
-  },
+  // {
+  //   path: '/msc',
+  //   name: '商户管理',
+  //   icon: 'shop',
+  //   component: './msc',
+  // },
   {
     path: '/goods',
     name: '商品管理',
@@ -43,6 +43,11 @@
         name: '商品详情',
         component: './goods/details',
         hideInMenu: true,
+      },
+      {
+        path: '/goods/specs',
+        name: '商品规格',
+        component: './goods/specs',
       },
 
       { path: '/goods', redirect: '/goods/home' },

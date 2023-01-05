@@ -75,7 +75,8 @@ const Index: React.FC<IndexProps> = (props) => {
                     //         </Button>,
                     //     ];
                     // }}
-                    search={{}}
+                    search={false}
+
                     rowKey="id"
                     request={async (params): Promise<any> => handleTableList(params)
                     }

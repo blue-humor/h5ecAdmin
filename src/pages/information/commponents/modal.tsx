@@ -50,7 +50,7 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, activeKey, handleMod
 
     useEffect(() => {
         if (row?.id) {
-            const { title, content, thumb, video } = row
+            const { title, content, thumb, video, comments } = row
 
             setFileThumb(thumb)
             setFileVideo(video)
@@ -59,6 +59,7 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, activeKey, handleMod
                 title,
                 content,
                 thumb,
+                comments,
                 video
             })
         }
@@ -76,7 +77,6 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, activeKey, handleMod
                             onFinish={(values): Promise<any> => row?.id ? handleEditor(values) : handleAdd(values)}>
                             <ProFormText name="title" label="文章标题" placeholder="请输入文章标题" tooltip='文章标题是必填项' rules={information.title} />
                             <ProFormTextArea name="content" label="文章详情" placeholder="请输入文章详情" tooltip='文章详情' />
-
                             <ProForm.Item label="视频上传" name="video">
                                 <Upload name='file' accept='video/*' listType='text' setKey={setFileVideoKey} maxCount={1} fileList={fileVideo}>
                                     <Button icon={<UploadOutlined />}>上传视频</Button>
@@ -87,7 +87,7 @@ const EditModal: React.FC<EditModalProps> = ({ row, isOpen, activeKey, handleMod
                                     <Button type='link' icon={<UploadOutlined />}>上传图片</Button>
                                 </Upload>
                             </ProForm.Item>
-
+                            <ProFormTextArea name="comments" label="备注" placeholder="请输入备注" tooltip='备注' />
                         </ProForm>
                 }
             </Modal >

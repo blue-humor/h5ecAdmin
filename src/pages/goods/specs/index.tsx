@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 
-import { Button, Popconfirm, Image, message } from 'antd';
-import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, message } from 'antd';
+import { PlusOutlined, FormOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
-import { reqTableList, reqDel } from '@/services/banner';
+import { reqDel, reqSpecsList } from '@/services/specs';
 
-import type { TableListItem, TableListPagination } from './data';
+import type { TableListItem, TableListPagination } from '../data';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 
 interface IndexProps { }
@@ -19,16 +19,22 @@ const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
 
+
+
 const Index: React.FC<IndexProps> = (props) => {
     const actionRef = useRef<any>()
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [row, setRow] = useState<any>()
-    const handleModal = (show: boolean, row: any = null) => {
+
+    const [type, setType] = useState('')
+
+    const handleModal = (show: boolean, row: any = null, type: string = '') => {
+
         setRow(row)
         setIsOpen(show)
+        setType(type)
     }
-
 
     const handleDelete = async (id: number) => {
         const res = await reqDel({ id })
@@ -37,18 +43,16 @@ const Index: React.FC<IndexProps> = (props) => {
             actionRef?.current.reload()
         }
     }
-
     const handleTableList = async (params: TableListPagination) => {
-        const res = await reqTableList(params);
+        const res = await reqSpecsList(params);
         if (res.code === 200) {
+
             return {
-                data: res.data.list,
+                data: res.data,
                 success: true,
-                total: res.data.total,
+                // total,
             };
         }
-
-
     };
 
     /**
@@ -58,22 +62,16 @@ const Index: React.FC<IndexProps> = (props) => {
      */
 
 
+
+
     const columns: ProColumns<TableListItem>[] = [
 
         {
-            align: 'center',
-            width: 160,
-            title: '轮播图片',
-            dataIndex: 'fileUrl',
-            hideInSearch: true,
-            render: (_, row) => <Image width={80} src={row?.fileUrl[0]?.url} placeholder />
-        },
-        {
-            title: '标题',
-            dataIndex: 'fileName',
+            title: '分类名称',
+            dataIndex: 'name',
             copyable: true,
-            hideInSearch: true,
         },
+
         {
             width: 280,
             align: 'center',
@@ -81,8 +79,11 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '操作',
             hideInSearch: true,
             render: (_, row) => [
-                <Button key='edit' type="link" icon={<FormOutlined />} onClick={() => handleModal(true, row)} >
+                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row, 'edit')}>
                     编辑
+                </Button>,
+                <Button type="link" key='add' icon={<PlusCircleOutlined />} onClick={() => handleModal(true, row, 'add')}>
+                    添加
                 </Button>,
                 <Popconfirm
                     key='popconfirm'
@@ -92,7 +93,7 @@ const Index: React.FC<IndexProps> = (props) => {
                     cancelText="No"
                     onConfirm={() => handleDelete(row?.id)}
                 >
-                    <Button key='delete' type="link" icon={<DeleteOutlined />}>
+                    <Button type="link" key='delete' icon={<DeleteOutlined />} >
                         删除
                     </Button>
                 </Popconfirm>,
@@ -109,31 +110,28 @@ const Index: React.FC<IndexProps> = (props) => {
                 <ProTable<TableListItem, TableListPagination>
                     // scroll={{ x: 1300 }}
                     search={false}
-
-                    headerTitle='banner列表'
+                    headerTitle='规格列表'
                     defaultSize={size}
                     columns={columns}
                     actionRef={actionRef}
                     request={(params): Promise<any> => handleTableList(params)}
                     rowKey="id"
-                    pagination={{
-                        defaultPageSize: 5,
-                        showSizeChanger: true,
-                    }}
+                    pagination={false}
                     dateFormatter="string"
                     toolBarRender={() => [
                         <Button
                             key="button"
                             type="primary"
-                            icon={<PlusOutlined />}
-                            onClick={() => handleModal(true)}
+                            icon={<PlusCircleOutlined />}
+                            // size={size}
+                            onClick={() => handleModal(true, 'add')}
                         >
                             新建
                         </Button>]}
                 />
             </PageContainer>
             {
-                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} /> : null
+                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} type={type} /> : null
             }
         </>
     );

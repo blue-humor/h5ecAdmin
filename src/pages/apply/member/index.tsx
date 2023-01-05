@@ -144,6 +144,8 @@ const Index: React.FC<IndexProps> = (props) => {
             <PageContainer title={handlePageTitle()}>
                 <ProTable<TableListItem, TableListPagination>
                     // scroll={{ x: 1300 }}
+                    search={false}
+
                     headerTitle={`${teamName} 队员信息列表`}
                     defaultSize={size}
                     columns={type === '1' ? [...columns, ...campus] : columns}

@@ -156,6 +156,7 @@ const Index: React.FC<IndexProps> = (props) => {
       <PageContainer>
         <ProTable<TableListItem, TableListPagination>
           // scroll={{ x: 1300 }}
+          search={false}
           defaultSize={size}
           columns={columns}
           actionRef={actionRef}
