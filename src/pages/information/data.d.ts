@@ -5,6 +5,7 @@ export type TableListPagination = {
 };
 
 export type TableListItem = {
+  position: number;
   title: string;
   thumb: any;
   type: string;
