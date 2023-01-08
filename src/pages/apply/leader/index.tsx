@@ -83,7 +83,7 @@ const Index: React.FC<IndexProps> = (props) => {
 
             title: '队伍名称',
             dataIndex: 'teamName',
-            copyable: true,
+            // copyable: true,
             ellipsis: true,
             width: 180,
         },
@@ -111,6 +111,8 @@ const Index: React.FC<IndexProps> = (props) => {
             title: '参赛项目',
             dataIndex: 'projectNames',
             hideInSearch: true,
+            ellipsis: true,
+            width: 180,
         },
         {
             width: 180,
@@ -211,7 +213,7 @@ const Index: React.FC<IndexProps> = (props) => {
                                 },
                                 {
                                     key: '3',
-                                    tab: '邀请赛俱乐部',
+                                    tab: '俱乐部组',
                                 },
                             ],
                         },

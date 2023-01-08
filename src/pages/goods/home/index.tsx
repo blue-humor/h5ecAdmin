@@ -93,19 +93,19 @@ const Index: React.FC<IndexProps> = (props) => {
       dataIndex: 'price',
       hideInSearch: true,
       render: (_, row) => <Tag className={styles.homeTagPrice}>
-        ￥{priceFormat(row?.price, 2)}
+        ￥{row?.price}
       </Tag>
     },
-    {
-      width: 100,
-      align: 'center',
-      title: '原价',
-      dataIndex: 'originPrice',
-      hideInSearch: true,
-      render: (_, row) => <Tag className={styles.homeTagOriginal}>
-        ￥{priceFormat(row?.originPrice, 2)}
-      </Tag>
-    },
+    // {
+    //   width: 100,
+    //   align: 'center',
+    //   title: '原价',
+    //   dataIndex: 'originPrice',
+    //   hideInSearch: true,
+    //   render: (_, row) => <Tag className={styles.homeTagOriginal}>
+    //     ￥{row?.originPrice}
+    //   </Tag>
+    // },
     {
       width: 100,
       align: 'center',

@@ -26,6 +26,9 @@ import { reqSpecsList } from '@/services/specs';
 
 
 import { goodDetails } from '@/utils/rules';
+
+import { priceFormat } from '@/utils/index';
+
 import styles from './index.less';
 
 
@@ -94,7 +97,9 @@ const Index: React.FC<IndexProps> = (props) => {
             setPrimaryImageList(primaryImage)
             setDescImageList(descImage)
 
+
             setInitialValues({
+
                 price,
                 originPrice,
                 soldNum,
@@ -185,15 +190,16 @@ const Index: React.FC<IndexProps> = (props) => {
 
                             <ProForm.Group>
                                 <ProFormMoney
+                                    fieldProps={{ precision: 2 }}
                                     width="xl"
                                     name="price"
-                                    label="现价"
-                                    placeholder="请输入现价"
+                                    label="价格"
+                                    placeholder="请输入价格"
                                     min={0}
                                     max={9999999999999999}
                                 // rules={[{ required: true, message: '请输入现价价格' }]}
                                 />
-                                <ProFormMoney
+                                {/* <ProFormMoney
                                     width="xl"
                                     name="originPrice"
                                     label="原价"
@@ -201,11 +207,11 @@ const Index: React.FC<IndexProps> = (props) => {
                                     min={0}
                                     max={9999999999999999}
                                 // rules={[{ required: true, message: '请输入原价价格' }]}
-                                />
+                                /> */}
 
                             </ProForm.Group>
 
-                            <ProFormDigit
+                            {/* <ProFormDigit
                                 width="xl"
                                 name="soldNum"
                                 label="库存"
@@ -213,7 +219,7 @@ const Index: React.FC<IndexProps> = (props) => {
                                 min={0}
                                 max={99999999}
                                 rules={goodDetails.soldNum}
-                            />
+                            /> */}
                             {/* <ProFormTextArea
                                 width="xl"
                                 name="desc"
@@ -273,6 +279,7 @@ const Index: React.FC<IndexProps> = (props) => {
                                         label="价格"
                                         placeholder="请输入价格"
                                         min={0}
+                                        fieldProps={{ precision: 2 }}
                                         max={9999999999999999}
                                     // rules={[{ required: true, message: '请输入现价价格' }]}
                                     />

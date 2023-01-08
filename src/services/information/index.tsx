@@ -29,3 +29,12 @@ export async function reqTableList(data: any, options?: any): Promise<any> {
         ...(options || {}),
     });
 }
+
+
+export async function reqPublishArticle(data: any, options?: any): Promise<any> {
+    return request('/v1/pc/publishArticle', {
+        method: 'POST',
+        data,
+        ...(options || {}),
+    });
+}

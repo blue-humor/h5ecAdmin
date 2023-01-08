@@ -8,7 +8,9 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { EditModal } from './commponents/modal';
 
 
-import { reqTableList, reqDetaleArticle } from '@/services/information';
+import { reqTableList, reqDetaleArticle, reqPublishArticle } from '@/services/information';
+
+import IconFont from '@/utils/iconFont';
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ProColumns } from '@ant-design/pro-table';
@@ -54,11 +56,13 @@ const Index: React.FC<IndexProps> = (props) => {
         }
     };
 
-    /**
-     * copyable 是否支持复制
-     * ellipsis 是否自动缩略
-     * tooltip 会在 title 之后展示一个 icon，hover 之后提示一些信息
-     */
+    const handlePublishArticle = async (id: number) => {
+        const res = await reqPublishArticle({ id })
+        if (res.code === 200) {
+            message.success(res?.message)
+            actionRef?.current.reload()
+        }
+    }
 
 
     const columns: ProColumns<TableListItem>[] = [
@@ -91,28 +95,38 @@ const Index: React.FC<IndexProps> = (props) => {
 
         {
             width: 160,
-            align: 'center',
+            align: 'left',
             fixed: 'right',
             title: '操作',
             hideInSearch: true,
-            render: (_, row) => [
-                <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} >
-                    编辑
-                </Button>,
+            render: (_, row) => {
+                return <>
 
-                <Popconfirm
-                    key='popconfirm'
-                    title={PopconfirmTitle}
-                    placement="topRight"
-                    okText="Yes"
-                    cancelText="No"
-                    onConfirm={() => handleDelete(row?.id)}
-                >
-                    <Button type="link" key='delete' icon={<DeleteOutlined />} >
-                        删除
+                    <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} >
+                        编辑
                     </Button>
-                </Popconfirm>,
-            ],
+
+                    <Popconfirm
+                        key='popconfirm'
+                        title={PopconfirmTitle}
+                        placement="topRight"
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => handleDelete(row?.id)}
+                    >
+                        <Button type="link" key='delete' icon={<DeleteOutlined />} >
+                            删除
+                        </Button>
+                    </Popconfirm>
+                    {
+                        row?.position === 9 ? <Button type="link" key='publish' icon={<IconFont type='icon-bushufabu' />} onClick={() => handlePublishArticle(row?.id)} >
+                            发布
+                        </Button> : null
+                    }
+                </>
+
+
+            }
         },
 
 
