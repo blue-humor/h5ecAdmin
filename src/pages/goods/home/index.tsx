@@ -90,10 +90,10 @@ const Index: React.FC<IndexProps> = (props) => {
       width: 100,
       align: 'center',
       title: '现价',
-      dataIndex: 'price',
+      dataIndex: 'originPrice',
       hideInSearch: true,
       render: (_, row) => <Tag className={styles.homeTagPrice}>
-        ￥{row?.price}
+        ￥{row?.originPrice}
       </Tag>
     },
     // {

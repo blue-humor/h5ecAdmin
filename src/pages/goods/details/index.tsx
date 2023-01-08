@@ -189,7 +189,7 @@ const Index: React.FC<IndexProps> = (props) => {
                             </ProForm.Group>
 
                             <ProForm.Group>
-                                <ProFormMoney
+                                {/* <ProFormMoney
                                     fieldProps={{ precision: 2 }}
                                     width="xl"
                                     name="price"
@@ -198,16 +198,17 @@ const Index: React.FC<IndexProps> = (props) => {
                                     min={0}
                                     max={9999999999999999}
                                 // rules={[{ required: true, message: '请输入现价价格' }]}
-                                />
-                                {/* <ProFormMoney
+                                /> */}
+                                <ProFormMoney
+                                    fieldProps={{ precision: 2 }}
                                     width="xl"
                                     name="originPrice"
-                                    label="原价"
-                                    placeholder="请输入原价"
+                                    label="价格"
+                                    placeholder="请输入价格"
                                     min={0}
                                     max={9999999999999999}
                                 // rules={[{ required: true, message: '请输入原价价格' }]}
-                                /> */}
+                                />
 
                             </ProForm.Group>
 
