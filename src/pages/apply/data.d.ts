@@ -5,6 +5,8 @@ export type TableListPagination = {
 };
 
 export type TableListItem = {
+  projectType: ReactNode;
+  projectNames: ReactNode;
   name: string;
   id: number;
   teamLogo: string;

@@ -118,6 +118,7 @@ const Detailmodal: React.FC<any> = ({ row, isDatailOpen, handleDetailModal }) =>
 
 
             setinitialValues({
+                remark,
                 address,
                 actualPrice,
                 PaymentAmount,

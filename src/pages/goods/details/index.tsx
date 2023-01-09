@@ -92,14 +92,14 @@ const Index: React.FC<IndexProps> = (props) => {
     const handleInfo = async () => {
         const res = await reqInfo({ id: id })
         if (res?.code === 200) {
-            const { thumb, primaryImage, descImage, price, originPrice, soldNum, title, sku, desc, categoryId } = res?.data
+            const { spuStockQuantity, thumb, primaryImage, descImage, price, originPrice, soldNum, title, sku, desc, categoryId } = res?.data
             setThumbList(thumb)
             setPrimaryImageList(primaryImage)
             setDescImageList(descImage)
 
 
             setInitialValues({
-
+                spuStockQuantity,
                 price,
                 originPrice,
                 soldNum,
@@ -212,15 +212,15 @@ const Index: React.FC<IndexProps> = (props) => {
 
                             </ProForm.Group>
 
-                            {/* <ProFormDigit
+                            <ProFormDigit
                                 width="xl"
-                                name="soldNum"
+                                name="spuStockQuantity"
                                 label="库存"
                                 placeholder="请输入库存"
-                                min={0}
+                                min={1}
                                 max={99999999}
-                                rules={goodDetails.soldNum}
-                            /> */}
+                            // rules={goodDetails.soldNum}
+                            />
                             {/* <ProFormTextArea
                                 width="xl"
                                 name="desc"
@@ -276,7 +276,7 @@ const Index: React.FC<IndexProps> = (props) => {
                                     <ProFormText style={{ padding: 0 }} width="md" name="name" label="规格名" placeholder="请输入规格名" />
                                     <ProFormMoney
                                         width="md"
-                                        name="price"
+                                        name="originPrice"
                                         label="价格"
                                         placeholder="请输入价格"
                                         min={0}

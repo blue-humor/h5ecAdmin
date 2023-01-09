@@ -7,6 +7,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 
 import { EditModal, Detailmodal } from './commponents/modal';
 import IconFont from '@/utils/iconFont';
+import { priceFormat } from '@/utils/index';
 
 
 import type { TableListItem, TableListPagination } from './data';
@@ -93,12 +94,12 @@ const Index: React.FC<IndexProps> = (props) => {
         {
             align: 'center',
             title: '商品总额',
-            dataIndex: 'totalAmount',
+            dataIndex: 'paymentAmount',
             //  ,
             copyable: true,
             hideInSearch: true,
             render: (_, row) => <Tag className={`${commonStyles.shaded} ${styles.tagColor}`}>
-                ￥{row?.totalAmount}
+                ￥{priceFormat(row?.paymentAmount, 2)}
             </Tag>
         },
         {
@@ -162,7 +163,7 @@ const Index: React.FC<IndexProps> = (props) => {
                 //         新建
                 //     </Button>]}
                 />
-            </PageContainer>    
+            </PageContainer>
             {
                 isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} /> : null
             }

@@ -25,7 +25,7 @@ const Index: React.FC<IndexProps> = (props) => {
 
 
 
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<any>();
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [row, setRow] = useState<TableListItem>()
@@ -106,17 +106,17 @@ const Index: React.FC<IndexProps> = (props) => {
     //     ￥{row?.originPrice}
     //   </Tag>
     // },
-    {
-      width: 100,
-      align: 'center',
-      title: '库存',
-      dataIndex: 'soldNum',
-      hideInSearch: true,
+    // {
+    //   width: 100,
+    //   align: 'center',
+    //   title: '库存',
+    //   dataIndex: 'soldNum',
+    //   hideInSearch: true,
 
-      render: (_, row) => <Tag className={styles.homeSoldNum}>
-        {row?.soldNum}件
-      </Tag>
-    },
+    //   render: (_, row) => <Tag className={styles.homeSoldNum}>
+    //     {row?.soldNum}件
+    //   </Tag>
+    // },
     // {
     //   title: '销量',
     //   dataIndex: 'sales',

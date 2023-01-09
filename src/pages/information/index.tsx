@@ -119,7 +119,7 @@ const Index: React.FC<IndexProps> = (props) => {
                         </Button>
                     </Popconfirm>
                     {
-                        row?.position === 9 ? <Button type="link" key='publish' icon={<IconFont type='icon-bushufabu' />} onClick={() => handlePublishArticle(row?.id)} >
+                        activeKey === '1' && row?.position === 9 ? <Button type="link" key='publish' icon={<IconFont type='icon-bushufabu' />} onClick={() => handlePublishArticle(row?.id)} >
                             发布
                         </Button> : null
                     }

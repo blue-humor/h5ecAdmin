@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { history } from 'umi';
-import { Button, Popconfirm, Image, Badge } from 'antd';
-import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Image, Tooltip } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
@@ -113,6 +113,9 @@ const Index: React.FC<IndexProps> = (props) => {
             hideInSearch: true,
             ellipsis: true,
             width: 180,
+            render: (_, row) => <Tooltip title={`${row?.projectType}-${row?.projectNames}`}>
+                <span>{`${row?.projectType}-${row?.projectNames}`}</span>
+            </Tooltip>
         },
         {
             width: 180,
