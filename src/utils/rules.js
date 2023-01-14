@@ -33,14 +33,14 @@ export const apply = {
   sex: [{ required: true, message: '请选择性别' }],
   teamLogo: [{ required: true, message: '请上传队伍logo' }],
   name: [{ required: true, message: '请输入队员姓名' }],
-  supervisorIdNo: [{ required: true, message: '请输入未成年人监护人身份证号' }],
-  supervisorName: [
-    { required: true, message: '请输入未成年人监护人姓名' },
+  supervisorIdNo: [
+    { required: true, message: '请输入未成年人监护人身份证号' },
     {
       pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       message: '请输入正确的身份证号码',
     },
   ],
+  supervisorName: [{ required: true, message: '请输入未成年人监护人姓名' }],
 
   // email: [
   //   {
@@ -149,6 +149,20 @@ export const information = {
     {
       required: true,
       message: '请输入文章标题',
+    },
+  ],
+};
+export const activity = {
+  title: [
+    {
+      required: true,
+      message: '请输入活动标题',
+    },
+  ],
+  image: [
+    {
+      required: true,
+      message: '请上传活动图片',
     },
   ],
 };

@@ -65,9 +65,16 @@
     name: '报名管理',
     icon: 'Audit',
     routes: [
-      { path: '/apply/leader', name: '领队列表', component: './apply/leader' },
-      { path: '/apply/member', name: '队员列表', component: './apply/member', hideInMenu: true },
-      { path: '/apply', redirect: '/apply/leader' },
+      { path: '/apply/activity', name: '活动列表', component: './apply/activity' },
+
+      {
+        path: '/apply/activity/leader',
+        name: '领队列表',
+        component: './apply/leader',
+        hideInMenu: true,
+      },
+      // { path: '/apply/member', name: '队员列表', component: './apply/member', hideInMenu: true },
+      { path: '/apply', redirect: '/apply/activity' },
       { component: './404' },
     ],
   },

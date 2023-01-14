@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 
-import { PageContainer, ProList } from '@ant-design/pro-components';
+import { PageContainer, ProColumns, ProList, ProTable } from '@ant-design/pro-components';
 
 import { EditModal } from './commponents/modal';
 
@@ -10,6 +10,8 @@ import { reqTableList } from '@/services/vip';
 
 import type { TableListItem, TableListPagination } from './data';
 import type { ActionType } from '@ant-design/pro-table';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Image } from 'antd';
 
 interface IndexProps { }
 
@@ -22,11 +24,9 @@ const Index: React.FC<IndexProps> = (props) => {
     const actionRef = useRef<ActionType>();
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [row, setRow] = useState<TableListItem>()
-    const handleModal = (show: boolean, row?: TableListItem) => {
-        if (row?.id) {
-            setRow(row)
-        }
+    const [type, setType] = useState<number>()
+    const handleModal = (show: boolean, type?: number) => {
+        setType(type)
         setIsOpen(show)
     }
 
@@ -45,6 +45,28 @@ const Index: React.FC<IndexProps> = (props) => {
         }
 
     };
+
+
+    const columns: ProColumns<any>[] = [
+        {
+            align: 'center',
+            width: 160,
+            title: '用户头像',
+            dataIndex: 'headimg',
+            hideInSearch: true,
+            render: (_, row) => <Image width={60} src={row?.headimg} placeholder />
+        },
+        {
+            title: '用户名称',
+            dataIndex: 'nickName',
+            copyable: true,
+            hideInSearch: true,
+        },
+
+
+
+    ]
+
 
 
     const metas: any = {
@@ -67,7 +89,7 @@ const Index: React.FC<IndexProps> = (props) => {
     return (
         <>
             <PageContainer>
-                <ProList<TableListItem>
+                {/* <ProList<TableListItem>
                     // toolBarRender={() => {
                     //     return [
                     //         <Button key="3" type="primary">
@@ -86,11 +108,46 @@ const Index: React.FC<IndexProps> = (props) => {
                     }}
                     showActions="hover"
                     metas={metas}
+                /> */}
+                <ProTable<TableListItem, TableListPagination>
+                    // scroll={{ x: 1300 }}
+                    search={false}
+                    headerTitle='会员列表'
+                    defaultSize={size}
+                    columns={columns}
+                    actionRef={actionRef}
+                    request={(params): Promise<any> => handleTableList(params)}
+                    rowKey="id"
+                    pagination={{
+                        defaultPageSize: 5,
+                        showSizeChanger: true,
+                    }}
+                    dateFormatter="string"
+                    toolBarRender={() => [
+                        <Button
+                            key="button"
+                            type="primary"
+                            icon={<PlusOutlined />}
+                            onClick={() => handleModal(true, 1)}
+                        >
+                            修改关于我们
+                        </Button>,
+                        <Button
+                            key="button"
+
+                            icon={<PlusOutlined />}
+                            onClick={() => handleModal(true, 2)}
+                        >
+                            修改联系我们
+                        </Button>,
+                    ]
+
+                    }
+
                 />
+
             </PageContainer>
-            {
-                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} /> : null
-            }
+            <EditModal isOpen={isOpen} handleModal={handleModal} type={type} />
         </>
     );
 };

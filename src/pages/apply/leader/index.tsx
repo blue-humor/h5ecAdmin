@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react';
-import { history } from 'umi';
+import { history, Link } from 'umi';
 import { Button, Popconfirm, Image, Tooltip } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FileExcelOutlined } from '@ant-design/icons';
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 
-import { EditModal } from './commponents/modal';
 
 import IconFont from '@/utils/iconFont';
 
 import { reqTableList, reqDelete } from '@/services/apply';
 
+import MemberModel from './commponents/member/index';
 
 
 import type { TableListItem, TableListPagination } from '../data';
@@ -23,17 +23,19 @@ const PopconfirmTitle = `确认删除吗？此操作不可撤销  `;
 
 
 const Index: React.FC<IndexProps> = (props) => {
+
+    const { activityId, activityname } = history.location.query as { activityId: string, activityname: string }
+
     const actionRef = useRef<any>()
 
-    const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [row, setRow] = useState<any>()
+
+    const [info, setInfo] = useState<any>()
 
     const [activeKey, setActiveKey] = useState<any>('1');
 
-    const handleModal = (show: boolean, row: any = null) => {
-        setRow(row)
-        setIsOpen(show)
-    }
+    const [openList, setOpenList] = useState(false)
+
+
 
     const handleDelete = async (id: number) => {
         const res = await reqDelete({ id })
@@ -45,7 +47,7 @@ const Index: React.FC<IndexProps> = (props) => {
     const handleTableList = async (params: any) => {
 
 
-        const res = await reqTableList({ ...params, type: activeKey })
+        const res = await reqTableList({ ...params, type: activeKey, activityId })
         if (res.code === 200) {
             const { list, total } = res?.data
             return {
@@ -56,6 +58,12 @@ const Index: React.FC<IndexProps> = (props) => {
         }
     };
 
+
+    const handleOnCloseList = (isOpen: boolean, info: any = null) => {
+        // openList, handleOnCloseList, info 
+        setOpenList(isOpen)
+        setInfo(info)
+    }
 
     /**
      * copyable 是否支持复制
@@ -77,7 +85,7 @@ const Index: React.FC<IndexProps> = (props) => {
             title: 'Logo',
             // fixed: 'left',
             hideInSearch: true,
-            render: (_: any, record: { teamLogo: string | undefined; }) => <Image width={64} src={record.teamLogo} />,
+            render: (_: any, record) => <Image width={64} src={record.teamLogo} />,
         },
         {
 
@@ -95,12 +103,14 @@ const Index: React.FC<IndexProps> = (props) => {
             hideInSearch: true,
         },
         {
+            width: 160,
             align: 'center',
             title: '性别',
             dataIndex: 'sex',
             hideInSearch: true,
         },
         {
+            width: 140,
             align: 'center',
             title: '队伍类型',
             dataIndex: 'groupName',
@@ -118,7 +128,7 @@ const Index: React.FC<IndexProps> = (props) => {
             </Tooltip>
         },
         {
-            width: 180,
+            width: 140,
             align: 'center',
             title: '联系电话',
             dataIndex: 'contactPhone',
@@ -140,7 +150,7 @@ const Index: React.FC<IndexProps> = (props) => {
             hideInSearch: true,
         },
         {
-            width: 200,
+            width: 260,
             align: 'center',
             fixed: 'right',
             title: '操作',
@@ -149,14 +159,15 @@ const Index: React.FC<IndexProps> = (props) => {
                 // <Button type="link" key='edit' icon={<FormOutlined />} onClick={() => handleModal(true, row)} />,
                 <Button type="link" key='look' icon={<IconFont type='icon-chakan' />}
                     onClick={() => {
-                        history.push({
-                            pathname: '/apply/member',
-                            query: {
-                                id: `${row?.id}`,
-                                type: activeKey,
-                                teamName: row?.teamName
-                            }
-                        })
+                        // history.push({
+                        //     pathname: '/apply/member',
+                        //     query: {
+                        //         id: `${row?.id}`,
+                        //         type: activeKey,
+                        //         teamName: row?.teamName
+                        //     }
+                        // })
+                        handleOnCloseList(true, row)
                     }}
                 >
                     查看</Button>,
@@ -172,6 +183,11 @@ const Index: React.FC<IndexProps> = (props) => {
                         删除
                     </Button>
                 </Popconfirm>,
+                <Button type='link' icon={<FileExcelOutlined />}>
+                    <a download href={`${BASE_URL}/data/exportexcel?id=${row?.id}`}>
+                        下载
+                    </a>
+                </Button>
             ],
         },
 
@@ -181,11 +197,10 @@ const Index: React.FC<IndexProps> = (props) => {
 
     return (
         <>
-            <PageContainer>
+            <PageContainer title={`${activityname}的领队列表`}>
                 <ProTable<TableListItem, TableListPagination>
                     // headerTitle='领队列表'
                     search={false}
-
                     scroll={{ x: 1600 }}
                     defaultSize={size}
                     columns={activeKey === '1' ? [...typeColumns, ...columns] : columns}
@@ -233,9 +248,7 @@ const Index: React.FC<IndexProps> = (props) => {
                 //     </Button>]}
                 />
             </PageContainer>
-            {
-                isOpen ? <EditModal isOpen={isOpen} handleModal={handleModal} row={row} actionRef={actionRef} /> : null
-            }
+            <MemberModel handleOnCloseList={handleOnCloseList} openList={openList} info={info} type={activeKey} />
         </>
     );
 };

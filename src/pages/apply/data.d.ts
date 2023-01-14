@@ -5,12 +5,14 @@ export type TableListPagination = {
 };
 
 export type TableListItem = {
-  projectType: ReactNode;
-  projectNames: ReactNode;
-  name: string;
+  teamLogo: string | undefined;
+  teamName: string | string[] | null;
+  intro: string;
   id: number;
-  teamLogo: string;
-  teamName: string;
+  thumb: any;
+  title: string;
+  status: string;
+  thumbList: any;
 };
 
 export type EditModalProps = {
