@@ -103,6 +103,15 @@ const Index: React.FC<IndexProps> = (props) => {
             hideInSearch: true,
         },
         {
+            width: 200,
+            align: 'center',
+            title: '邮箱',
+            dataIndex: 'email',
+            copyable: true,
+            ellipsis: true,
+            hideInSearch: true,
+        },
+        {
             width: 160,
             align: 'center',
             title: '性别',

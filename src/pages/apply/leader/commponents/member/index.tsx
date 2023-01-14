@@ -117,6 +117,7 @@ const Index: React.FC<IndexProps> = ({ openList, handleOnCloseList, info, type }
             hideInSearch: true,
         },
 
+
         {
             width: 280,
             align: 'center',
